@@ -305,7 +305,9 @@ const get_service = async (req, res) => {
             tiktok_number: service.tiktok_number,
             questions_and_answers: questions_and_answers,
             whyMain_and_whySub: whyMain_and_whySub,
-            bunch: service.bunch
+            bunch: service.bunch,
+            price: service.price,
+            note: service.note
         };
 
         res.status(200).json(response);
@@ -356,7 +358,9 @@ const get_all_services = async (req, res) => {
         tiktok_number: service.service_id.tiktok_number,
         questions_and_answers: questions_and_answers,
         whyMain_and_whySub: whyMain_and_whySub,
-        bunch: service.service_id.bunch
+        bunch: service.service_id.bunch,
+        price: service.service_id.price,
+        note: service.service_id.note
       };
     }).filter(service => service !== null); 
 
@@ -411,7 +415,11 @@ const get_all_services_in_dash = async (req, res) => {
             twitter_number: service.service_id.twitter_number,
             snap_number: service.service_id.snap_number,
             tiktok_number: service.service_id.tiktok_number,
-            bunch: service.service_id.bunch
+            bunch: service.service_id.bunch,
+            price: service.service_id.price,
+            note: service.service_id.note,
+            questions_and_answers: service.service_id.questions_and_answers,
+            whyMain_and_whySub: service.service_id.whyMain_and_whySub,
         }));
 
         res.status(200).json(response);
