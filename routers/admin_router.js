@@ -1,0 +1,66 @@
+const router = require('express').Router();
+const { adminAuth } = require('../middleware/auth');
+const { setLanguage } = require('../middleware/setLanguage');     
+
+const { 
+  admin_Register,
+  admin_Login,
+  add_main,
+  get_main,
+  get_all_main,
+  edit_main,
+  delete_main,
+  delete_all_mains,
+
+  add_service_to_main,
+  edit_service,
+  get_service,
+  get_all_services,
+  delete_service,
+  delete_all_services
+
+ } = require('../controllers/dashboard_control');
+
+ const {  
+  get_all_forms,
+  delete_form,
+  delete_all_form
+}=require('../controllers/web_control')
+
+
+const {Iupload,Vupload} = require("../middleware/uploads")
+
+router.post('/admin_register', setLanguage, admin_Register);
+router.post('/admin_login', setLanguage, admin_Login);
+
+
+
+router.post('/add_main',adminAuth, add_main);
+router.patch('/edit_main/:main_id',adminAuth, edit_main);
+router.get('/get_main/:main_id',adminAuth, setLanguage, get_main);
+router.get('/get_all_main',adminAuth, setLanguage, get_all_main);
+router.delete('/delete_main/:main_id',adminAuth, delete_main);
+router.delete('/delete_all_main',adminAuth, delete_all_mains);
+
+
+
+router.post('/add_service_to_main/:main_id',adminAuth, add_service_to_main);
+
+router.patch('/edit_service/:service_id', adminAuth, edit_service);
+
+
+router.get('/get_service/:service_id',adminAuth, setLanguage, get_service);
+router.get('/get_all_services',adminAuth, setLanguage, get_all_services);
+
+
+
+router.delete('/delete_service/:service_id',adminAuth, delete_service);
+router.delete('/delete_all_services/',adminAuth, delete_all_services);
+
+
+router.get('/get_all_forms',adminAuth, setLanguage, get_all_forms);
+router.delete('/delete_form', adminAuth, setLanguage, delete_form);
+router.delete('/delete_all_form',adminAuth, setLanguage, delete_all_form);
+
+
+module.exports = router;

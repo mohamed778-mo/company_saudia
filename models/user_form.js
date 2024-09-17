@@ -1,0 +1,70 @@
+const mongoose = require('mongoose'); 
+const validator = require('validator')
+
+
+
+var userSchema = new mongoose.Schema({
+    firstname:{
+        type: String,
+        required: true, 
+        unique: true 
+        },
+    lastname: { 
+        type: String,
+        required: true 
+        },
+    email: { 
+        type: String, 
+        required: true,
+        unique: true, 
+        trim: true,
+        validate(value) { 
+         if (!validator.isEmail(value)) {
+             throw new Error("Invalid email") } } 
+            },
+    mobile: { 
+        type:String, 
+        required: true,
+        trim: true 
+        },
+    address: { 
+        type: String, 
+        required: true 
+    },
+    service_name:{
+        type: String, 
+        required: true 
+    }
+ 
+
+}, 
+{ timestamps: true }
+
+);
+
+// userSchema.pre("save",async function(){
+
+//     try {
+//      const user = this 
+//         if(!user.isModified("password")){
+        
+//           return
+//         }
+//             user.password = await bcryptjs.hash( user.password , 8)
+      
+//       }
+//    catch (error) {
+//         console.log(error)
+//   } 
+//      })     
+    
+//      userSchema.methods.toJSON = function(){
+//         const user = this 
+//         const dataToObject = user.toObject()
+//         delete dataToObject.password
+//         delete dataToObject.tokens
+       
+//         return dataToObject
+//       }
+
+module.exports = mongoose.model('User', userSchema);
