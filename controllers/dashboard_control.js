@@ -15,7 +15,7 @@ const admin_Register = async (req, res) => {
             return res.status(400).send(message);
         }
 
-        const hashedPassword = await bcryptjs.hash(password, 10);
+        const hashedPassword = await bcryptjs.hash(password, 8);
         const newUser = new Admin({ firstname, lastname, email, mobile, password: hashedPassword, address });
         await newUser.save();
 
