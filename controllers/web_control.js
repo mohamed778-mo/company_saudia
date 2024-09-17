@@ -31,7 +31,7 @@ const get_all_forms =async (req,res)=>{
      
         const data = await User.find()
     if(!data){
-        return res.status(400).send([])
+        return res.status(200).send([])
     }
         res.status(200).send(data)
     
