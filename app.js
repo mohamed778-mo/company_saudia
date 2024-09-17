@@ -11,6 +11,8 @@ const swaggerDocument = require("./swagger-output.json");
 
 const user = require('./routers/user_router')
 const admin = require('./routers/admin_router')
+const video = require('./routers/video_router')
+
 
 
 const app = express();
@@ -23,6 +25,8 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use('/app/user',user)
 app.use('/app/admin',admin)
+app.use('/app/video',video)
+
 
 
 
