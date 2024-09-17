@@ -11,7 +11,7 @@ const {  get_service , get_all_services } = require('../controllers/dashboard_co
 router.post('/create_form', setLanguage, create_form);
 
 router.get('/get_service/:sevice_id',setLanguage, get_service);
-router.get('/get_all_service',setLanguage, get_all_services);
+router.get('/get_all_service/:main_id',setLanguage, get_all_services);
 
 
 module.exports = router;
