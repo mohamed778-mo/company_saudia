@@ -317,44 +317,58 @@ const get_service = async (req, res) => {
 
 const get_all_services = async (req, res) => {
     try {
-        const services = await Services.find();
+    const main_id = req.params.main_id;
 
-        if (!services || services.length === 0) {
-            return res.status(200).send([]);
-        }
+    const mainServices = await Main.findById(main_id).populate({
+      path: 'services_list.service_id',
+      model: 'Services', 
+    });
 
-        const response = services.map(service => {
-            const questions_and_answers = service.questions_and_answers.map(qa => ({
-                question: req.language === 'ar' ? qa.question_arabic : qa.question_english,
-                answer: req.language === 'ar' ? qa.answer_arabic : qa.answer_english
-            }));
-
-            const whyMain_and_whySub = service.whyMain_and_whySub.map(why => ({
-                why_main: req.language === 'ar' ? why.why_main_arabic : why.why_main_english,
-                why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english
-            }));
-
-            return {
-                service_id: service._id,
-                video_link: service.videolink,
-                name: req.language === 'ar' ? service.arabic_name : service.english_name,
-                address_main: req.language === 'ar' ? service.address_arabic_main : service.address_english_main,
-                address_sub: req.language === 'ar' ? service.address_arabic_sub : service.address_english_sub,
-                youtube_number: service.youtube_number,
-                instagram_number: service.instagram_number,
-                twitter_number: service.twitter_number,
-                snap_number: service.snap_number,
-                tiktok_number: service.tiktok_number,
-                questions_and_answers: questions_and_answers,
-                whyMain_and_whySub: whyMain_and_whySub,
-                bunch: service.bunch
-            };
-        });
-
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching services', error });
+    if (!mainServices) {
+      return res.status(404).json({ message: 'Main not found' });
     }
+
+ 
+    const services = mainServices.services_list.map(service => {
+      if (!service.service_id) {
+        return null; 
+      }
+      const questions_and_answers = service.service_id.questions_and_answers.map(qa => ({
+        question: req.language === 'ar' ? qa.question_arabic : qa.question_english,
+        answer: req.language === 'ar' ? qa.answer_arabic : qa.answer_english
+      }));
+
+      const whyMain_and_whySub = service.service_id.whyMain_and_whySub.map(why => ({
+        why_main: req.language === 'ar' ? why.why_main_arabic : why.why_main_english,
+        why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english
+      }));
+
+      return {
+        service_id: service.service_id._id,
+        video_link: service.service_id.videolink,
+        name: req.language === 'ar' ? service.service_id.arabic_name : service.service_id.english_name,
+        address_main: req.language === 'ar' ? service.service_id.address_arabic_main : service.service_id.address_english_main,
+        address_sub: req.language === 'ar' ? service.service_id.address_arabic_sub : service.service_id.address_english_sub,
+        youtube_number: service.service_id.youtube_number,
+        instagram_number: service.service_id.instagram_number,
+        twitter_number: service.service_id.twitter_number,
+        snap_number: service.service_id.snap_number,
+        tiktok_number: service.service_id.tiktok_number,
+        questions_and_answers: questions_and_answers,
+        whyMain_and_whySub: whyMain_and_whySub,
+        bunch: service.service_id.bunch
+      };
+    }).filter(service => service !== null); 
+
+
+    res.status(200).json({
+      main_name_arabic: mainServices.main_arabic_name,
+      main_name_english: mainServices.main_english_name,
+      services
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching services', error });
+  }
 };
 
 
@@ -374,13 +388,33 @@ const get_service_in_dash = async (req, res) => {
 
 const get_all_services_in_dash = async (req, res) => {
     try {
-        const services = await Services.find();
+        const  main_id  = req.params.main_id
 
-        if (!services || services.length === 0) {
-            return res.status(200).send([]);
+        const main = await Main.findById(main_id).populate('services_list.service_id');
+
+        if (!main) {
+            return res.status(404).json({ message: 'Main not found' });
         }
 
-        res.status(200).send(services);
+     
+        const response = main.services_list.map(service => ({
+            service_id: service.service_id._id,
+            service_name_arabic: service.service_id.arabic_name,
+            service_name_english: service.service_id.english_name,
+            video_link: service.service_id.videolink,
+            address_main_arabic: service.service_id.address_arabic_main,
+            address_main_english: service.service_id.address_english_main,
+            address_sub_arabic: service.service_id.address_arabic_sub,
+            address_sub_english: service.service_id.address_english_sub,
+            youtube_number: service.service_id.youtube_number,
+            instagram_number: service.service_id.instagram_number,
+            twitter_number: service.service_id.twitter_number,
+            snap_number: service.service_id.snap_number,
+            tiktok_number: service.service_id.tiktok_number,
+            bunch: service.service_id.bunch
+        }));
+
+        res.status(200).json(response);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching services', error });
     }
