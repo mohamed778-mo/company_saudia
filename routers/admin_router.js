@@ -59,8 +59,8 @@ router.delete('/delete_all_services/',adminAuth, delete_all_services);
 
 
 router.get('/get_all_forms',adminAuth, setLanguage, get_all_forms);
-router.delete('/delete_form', adminAuth, setLanguage, delete_form);
-router.delete('/delete_all_form',adminAuth, setLanguage, delete_all_form);
+router.delete('/delete_form', adminAuth, delete_form);
+router.delete('/delete_all_form',adminAuth,  delete_all_form);
 
 
 module.exports = router;
