@@ -99,7 +99,7 @@ const get_all_main = async (req, res) => {
       const mains = await Main.find();
 
       if (!mains || mains.length === 0) {
-          return res.status(404).json({ message: 'Mains not found' });
+          return res.status(404).json([]);
       }
 
  
@@ -296,7 +296,7 @@ const get_all_services = async (req, res) => {
         const services = await Services.find();
 
         if (!services || services.length === 0) {
-            return res.status(404).json({ message: 'No services found' });
+            return res.status(404).json([]);
         }
 
         const response = services.map(service => {
