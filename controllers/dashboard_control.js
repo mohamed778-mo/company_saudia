@@ -118,7 +118,31 @@ const get_all_main = async (req, res) => {
   }
 };
 
+const get_main_in_dash = async (req, res) => {
+    try {
+        const main_id = req.params.main_id;
+        const main = await Main.findById(main_id)
 
+        res.status(200).json(main);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching main', error });
+    }
+};
+
+
+const get_all_main_in_dash = async (req, res) => {
+  try {
+      const mains = await Main.find();
+
+      if (!mains || mains.length === 0) {
+          return res.status(200).send([]);
+      }
+
+      res.status(200).send(mains);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching mains', error });
+  }
+};
 
 const edit_main = async (req, res) => {
     try {
@@ -334,6 +358,33 @@ const get_all_services = async (req, res) => {
 };
 
 
+const get_service_in_dash = async (req, res) => {
+    try {
+        const service_id = req.params.service_id;
+        const service = await Services.findById(service_id);
+
+      if(!service){return res.status(404).send('not exist')}
+        
+        res.status(200).json(service);
+        
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching service', error });
+    }
+};
+
+const get_all_services_in_dash = async (req, res) => {
+    try {
+        const services = await Services.find();
+
+        if (!services || services.length === 0) {
+            return res.status(200).send([]);
+        }
+
+        res.status(200).send(services);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching services', error });
+    }
+};
 
 const delete_service = async (req, res) => {
     try {
@@ -383,11 +434,16 @@ module.exports = {
     edit_main,
     delete_main,
     delete_all_mains,
+    get_main_in_dash,
+    get_all_main_in_dash,
+    
 
     add_service_to_main,
     edit_service,
     get_service,
     get_all_services,
     delete_service,
-    delete_all_services
+    delete_all_services,
+    get_service_in_dash,
+    get_all_services_in_dash
 };
