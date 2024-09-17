@@ -52,7 +52,7 @@ router.patch('/edit_service/:service_id', adminAuth, edit_service);
 
 
 router.get('/get_service_in_dash/:service_id',adminAuth,  get_service_in_dash);
-router.get('/get_all_services_in_dash',adminAuth, get_all_services_in_dash);
+router.get('/get_all_services_in_dash/:main_id',adminAuth, get_all_services_in_dash);
 
 
 
