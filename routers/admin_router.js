@@ -6,8 +6,6 @@ const {
   admin_Register,
     admin_Login,
     add_main,
-    get_main,
-    get_all_main,
     edit_main,
     delete_main,
     delete_all_mains,
@@ -17,8 +15,6 @@ const {
 
     add_service_to_main,
     edit_service,
-    get_service,
-    get_all_services,
     delete_service,
     delete_all_services,
     get_service_in_dash,
