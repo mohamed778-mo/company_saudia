@@ -70,8 +70,7 @@ AdminSchema.pre("save",async function(){
         }
             user.password = await bcryptjs.hash( user.password , 8)
       
-      }
-   catch (error) {
+    }catch (error) {
         console.log(error)
   } 
      })     
