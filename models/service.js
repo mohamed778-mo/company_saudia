@@ -58,6 +58,7 @@ const serviceSchema = new mongoose.Schema({
       }, 
     note:{
         type:String,
+        default:' '
       
       }, 
     price:{
