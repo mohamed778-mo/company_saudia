@@ -4,9 +4,9 @@ const { getVideoinService, deletevideo, postvideofromviemotoDB}=require('../cont
 const { adminAuth } = require('../middleware/auth');
 
 
-router.get('/get_video_in_service/:service_id', adminAuth , getVideoinService)
-router.delete('/delete_video/:service_id/:video_id', adminAuth ,deletevideo)
-router.post('/download_video/:service_id', adminAuth , postvideofromviemotoDB)
+router.get('/get_video_in_service/:service_id',  getVideoinService)
+router.delete('/delete_video/:service_id/:video_id', deletevideo)
+router.post('/download_video/:service_id', postvideofromviemotoDB)
 
 
 
