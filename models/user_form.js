@@ -25,10 +25,15 @@ var userSchema = new mongoose.Schema({
         required: true,
         trim: true 
         },
+    country: { 
+        type: String, 
+        required: true 
+    },
     address: { 
         type: String, 
         required: true 
     },
+     
     service_name:{
         type: String, 
         required: true 
