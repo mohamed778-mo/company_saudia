@@ -3,7 +3,7 @@ const Services = require("../models/service");
 
 const postvideofromviemotoDB = async (req, res) => {
   try {
-      const { videoId } = req.body;
+      const videoId  = req.body.videoId
       const urlParts = videoId.split('/');
       const VideoId = urlParts[0];
       const Vtoken = urlParts[1];
