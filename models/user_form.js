@@ -27,13 +27,21 @@ var userSchema = new mongoose.Schema({
         },
     country: { 
         type: String, 
+        required: true 
         
     },
-    address: { 
+    city: { 
         type: String, 
         required: true 
     },
-     
+    job: { 
+        type: String, 
+        required: true 
+    }, 
+    number_of_identity: { 
+        type: String, 
+        required: true 
+    }, 
     service_name:{
         type: String, 
         required: true 
