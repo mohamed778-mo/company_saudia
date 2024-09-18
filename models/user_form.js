@@ -27,7 +27,7 @@ var userSchema = new mongoose.Schema({
         },
     country: { 
         type: String, 
-        required: true 
+        
     },
     address: { 
         type: String, 
