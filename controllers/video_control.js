@@ -26,7 +26,7 @@ const postvideofromviemotoDB = async (req, res) => {
 
       await Services.updateOne(
           { _id: service_id },
-          { $push: { videolink: newVideo.videoURL } }
+          { $set: { videolink: newVideo.videoURL } }
       );
 
       res.status(200).send(newVideo);
