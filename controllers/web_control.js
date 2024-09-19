@@ -19,7 +19,7 @@ if(req.language === 'ar'){
 
     res.status(200).send(new_data)
     }else{
-    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'تواصل معنا')
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'تواصل معنا'})
     await new_data.save()
 
     res.status(200).send(new_data)
