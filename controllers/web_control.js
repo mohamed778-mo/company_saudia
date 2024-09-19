@@ -6,6 +6,7 @@ const create_form =async (req,res)=>{
 try{
     const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
     const service_id = req.params.service_id
+    if(service_id){
     const service_data =await Services.findById(service_id)
     let service_name;
 if(req.language === 'ar'){
@@ -17,7 +18,12 @@ if(req.language === 'ar'){
     await new_data.save()
 
     res.status(200).send(new_data)
+    }else{
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'تواصل معنا')
+    await new_data.save()
 
+    res.status(200).send(new_data)
+    }
 }catch(e){
     res.status(500).send(e.message)
 }
