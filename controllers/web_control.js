@@ -48,7 +48,7 @@ if(req.language === 'ar'){
         
     res.status(200).send('تم تسجيل طلبك')
     }else{
-    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'تواصل معنا'})
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity ,message, service_name:'اقتراح او شكوى'})
     await new_data.save()
 const transporter = nodemailer.createTransport({
           service:process.env.SERVICE,
@@ -64,12 +64,12 @@ const transporter = nodemailer.createTransport({
           async function main() {
           const info = await transporter.sendMail({
               from: process.env.USER_EMAIL, 
-              to: new_data.email , 
+              to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b> تم تسجيل طلب الخدمه </b><P> شكرا جزيلا سيتم التواصل معك </P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه `${new_data.email}` السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
            
             });
-          
+          console.log("Message sent");
           
           }
           
@@ -147,8 +147,6 @@ try{
     const new_data = new Form({firstName,lastName,email,phone,linkedin,twitter,country,city,agree,meetingPurpose,meetingType,otherPurpose})
     await new_data.save()
 
-   
-
 const transporter = nodemailer.createTransport({
           service:process.env.SERVICE,
           host: "smtp.gmail.com",
@@ -163,12 +161,12 @@ const transporter = nodemailer.createTransport({
           async function main() {
           const info = await transporter.sendMail({
               from: process.env.USER_EMAIL, 
-              to: new_data.email , 
+              to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b> حجز موعد مع المدير </b><P> شكرا جزيلا سيتم التواصل معك </P>`, 
+              html: `<b> حجز موعد مع المدير </b><P> برجاء التواصل معه `${new_data.email}` السلام عليكم استاذه روبا قد تم ملئ استماره "دعوة للنقاش والباحث الزائر" من المستخدم</P>`, 
            
             });
-          
+          console.log("Message sent");
           
           }
           
