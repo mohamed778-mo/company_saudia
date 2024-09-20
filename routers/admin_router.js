@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { adminAuth } = require('../middleware/auth');
 const { setLanguage } = require('../middleware/setLanguage');     
-const {Iupload} = require("../middleware/uploads")
+
 
 const { 
   admin_Register,
