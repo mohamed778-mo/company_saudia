@@ -415,95 +415,153 @@ const addServiceToMain = async (newService, main_id, res) => {
 
 
 
-const edit_service = async (req, res) => {
-  try {
-      const data = req.body;
-      const service_id = req.params.service_id;
+const edit_service_in_main = async (req, res) => {
+    try {
+        const { 
+            arabic_name,
+            english_name,
+            address_arabic_main,
+            address_english_main,
+            address_arabic_sub, 
+            address_english_sub, 
+            youtube_number, 
+            instagram_number,
+            twitter_number,
+            snap_number,
+            tiktok_number,
+            linkedin_number, 
+            note,  
+            price
+        } = req.body;
+        const service_id = req.params.service_id;
 
-const file = req.files.find(f => f.fieldname === 'file')
-    if (!file) {
-      
-       const updatedService = await Services.findByIdAndUpdate(service_id, data, { new: true });
+        const Q_A = JSON.parse(req.body.questions_and_answers);
+        const M_S = JSON.parse(req.body.whyMain_and_whySub);
+        const bunch = JSON.parse(req.body.bunch);
 
-      if (!updatedService) {
-          return res.status(404).json({ message: 'Service not found' });
-      }
+        const existing_service = await Services.findById(service_id);
 
-      
-      await Main.updateMany(
-          { 'services_list.service_id': service_id },
-          {
-              $set: {
-                  'services_list.$.Service_arabic_name': data.arabic_name,
-                  'services_list.$.Service_english_name': data.english_name
-              }
-          }
-      );
+        if (!existing_service) {
+            return res.status(404).json({ message: 'Service not found!' });
+        }
 
-      res.status(200).json(updatedService);
-     
-    }
+        if (req.files && req.files.length > 0) {
+            const file = req.files.find(f => f.fieldname === 'file');
+            if (file) {
+                if (!admin.apps.length) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert(serviceAccount),
+                        storageBucket: process.env.STORAGE_BUCKET
+                    });
+                }
 
-    if (!admin.apps.length) {
-            admin.initializeApp({
-              credential: admin.credential.cert(serviceAccount),
-              storageBucket: process.env.STORAGE_BUCKET
-            });
-          }
+                const bucket = admin.storage().bucket();
+                const blob = bucket.file(file.filename);
+                const blobStream = blob.createWriteStream({
+                    metadata: {
+                        contentType: file.mimetype
+                    }
+                });
 
-          const bucket = admin.storage().bucket();
-          const blob = bucket.file(file.filename);
-          const blobStream = blob.createWriteStream({
-            metadata: {
-              contentType: file.mimetype
+                await new Promise((resolve, reject) => {
+                    blobStream.on('error', (err) => {
+                        reject(err);
+                    });
+
+                    blobStream.on('finish', async () => {
+                        try {
+                            await blob.makePublic();
+                            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                            fs.unlinkSync(file.path); 
+
+                            existing_service.image = publicUrl;
+                            await existing_service.save();
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+
+                    fs.createReadStream(file.path).pipe(blobStream);
+                });
             }
-          });
+        }
 
+        existing_service.arabic_name = arabic_name;
+        existing_service.english_name = english_name;
+        existing_service.address_arabic_main = address_arabic_main;
+        existing_service.address_english_main = address_english_main;
+        existing_service.address_arabic_sub = address_arabic_sub;
+        existing_service.address_english_sub = address_english_sub;
+        existing_service.youtube_number = youtube_number;
+        existing_service.instagram_number = instagram_number;
+        existing_service.twitter_number = twitter_number;
+        existing_service.snap_number = snap_number;
+        existing_service.tiktok_number = tiktok_number;
+        existing_service.linkedin_number = linkedin_number;
+        existing_service.note = note;
+        existing_service.price = price;
 
-          await new Promise((reject) => {
-            blobStream.on('error', (err) => {
-              reject(err);
+        existing_service.questions_and_answers = [];
+        Q_A.forEach(Question => {
+            existing_service.questions_and_answers.push({
+                question_english: Question.question_english,
+                question_arabic: Question.question_arabic,
+                answer_english: Question.answer_english,
+                answer_arabic: Question.answer_arabic
             });
+        });
 
-            blobStream.on('finish', async () => {
-              try {
-                await blob.makePublic();
-                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-                fs.unlinkSync(file.path);
-   
-    
-     const updatedService = await Services.findByIdAndUpdate(service_id, data, {image:publicUrl} , { new: true });
-
-      if (!updatedService) {
-          return res.status(404).json({ message: 'Service not found' });
-      }
-
-      
-      await Main.updateMany(
-          { 'services_list.service_id': service_id },
-          {
-              $set: {
-                  'services_list.$.Service_arabic_name': data.arabic_name,
-                  'services_list.$.Service_english_name': data.english_name
-              }
-          }
-      );
-
-      res.status(200).json(updatedService);
-   
-  } catch (err) {
-                reject(err);
-              }
+        existing_service.whyMain_and_whySub = [];
+        M_S.forEach(Why => {
+            existing_service.whyMain_and_whySub.push({
+                why_main_arabic: Why.why_main_arabic,
+                why_main_english: Why.why_main_english,
+                why_sub_arabic: Why.why_sub_arabic,
+                why_sub_english: Why.why_sub_english
             });
+        });
 
-            fs.createReadStream(file.path).pipe(blobStream);
-          });
-      
-     
-  } catch (error) {
-      res.status(500).json({ message: 'Error updating service', error });
-  }
+        existing_service.bunch = [];
+        bunch.forEach(b => {
+            existing_service.bunch.push({
+                name: b.name,
+                description: b.description,
+                price: b.price
+            });
+        });
+
+        await existing_service.save();
+
+        await updateServiceInMain(existing_service, res);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
+
+const updateServiceInMain = async (updatedService, res) => {
+    try {
+        const mainData = await Main.findOne({ 'services_list.service_id': updatedService._id });
+
+        if (!mainData) {
+            return res.status(404).json({ message: 'Main not found!' });
+        }
+
+        await Main.updateOne(
+            { 'services_list.service_id': updatedService._id },
+            { 
+                $set: { 
+                    'services_list.$.Service_arabic_name': updatedService.arabic_name,
+                    'services_list.$.Service_english_name': updatedService.english_name
+                }
+            }
+        );
+
+        return res.status(200).json({ message: 'Service updated successfully!' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 
 
 
