@@ -34,12 +34,12 @@ if(req.language === 'ar'){
           async function main() {
           const info = await transporter.sendMail({
               from: process.env.USER_EMAIL, 
-              to: new_data.email , 
+              to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b> تم تسجيل طلب الخدمه </b><P> شكرا جزيلا سيتم التواصل معك </P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه ${new_data.email} السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
            
             });
-          
+          console.log("Message sent");
           
           }
           
@@ -66,7 +66,7 @@ const transporter = nodemailer.createTransport({
               from: process.env.USER_EMAIL, 
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه `${new_data.email}` السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه ${new_data.email} السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
            
             });
           console.log("Message sent");
@@ -163,7 +163,7 @@ const transporter = nodemailer.createTransport({
               from: process.env.USER_EMAIL, 
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b> حجز موعد مع المدير </b><P> برجاء التواصل معه `${new_data.email}` السلام عليكم استاذه روبا قد تم ملئ استماره "دعوة للنقاش والباحث الزائر" من المستخدم</P>`, 
+              html: `<b> حجز موعد مع المدير </b><P> برجاء التواصل معه ${new_data.email} السلام عليكم استاذه روبا قد تم ملئ استماره "دعوة للنقاش والباحث الزائر" من المستخدم</P>`, 
            
             });
           console.log("Message sent");
