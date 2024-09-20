@@ -34,27 +34,27 @@ const serviceSchema = new mongoose.Schema({
       }, 
     youtube_number:{
       type:Number,
-      required:true
+      
     }, 
     instagram_number:{
       type:Number,
-      required:true
+     
     },
     twitter_number:{
         type:Number,
-        required:true
+       
       },
     snap_number:{
         type:Number,
-        required:true
+       
       },
     tiktok_number:{
         type:Number,
-        required:true
+        
       },
     linkedin_number:{
         type:Number,
-        required:true
+       
       }, 
     note:{
         type:String,
@@ -67,7 +67,7 @@ const serviceSchema = new mongoose.Schema({
       }, 
     price:{
         type:Number,
-        required:true   
+          
     },
     
     questions_and_answers:[{
