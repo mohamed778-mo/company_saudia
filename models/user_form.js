@@ -20,27 +20,31 @@ var userSchema = new mongoose.Schema({
          if (!validator.isEmail(value)) {
              throw new Error("Invalid email") } } 
             },
-    mobile: { 
+    mobile:{ 
         type:String, 
         required: true,
         trim: true 
         },
-    country: { 
+    country:{ 
         type: String, 
-        required: true 
+       
         
     },
-    city: { 
+    city:{ 
         type: String, 
-        required: true 
+       
     },
-    job: { 
+    job:{ 
         type: String, 
-        required: true 
+       
     }, 
-    number_of_identity: { 
+    number_of_identity:{ 
         type: String, 
-        required: true 
+        
+    }, 
+    message:{ 
+        type: String, 
+        
     }, 
     service_name:{
         type: String, 
