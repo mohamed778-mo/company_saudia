@@ -198,16 +198,33 @@ const delete_all_mains = async (req, res) => {
 
 const add_service_to_main = async (req, res) => {
     try {
-        const data = req.body;
+        const { 
+    arabic_name,
+    english_name,
+    address_arabic_main,
+    address_english_main,
+    address_arabic_sub, 
+    address_english_sub, 
+    youtube_number, 
+    instagram_number ,
+    twitter_number,
+    snap_number,
+    tiktok_number,
+    linkedin_number, 
+    note,  
+    price
+} = req.body;
         const main_id = req.params.main_id;
 
-        const Q_A = JSON.parse(data.questions_and_answers || '[]');
-        const M_S = JSON.parse(data.whyMain_and_whySub || '[]');
+        const Q_A = JSON.parse(req.body.questions_and_answers);
+        const M_S = JSON.parse(req.body.whyMain_and_whySub );
+        const bunch = JSON.parse(req.body.bunch );
+        
 
     
         const existing_service = await Services.findOne({
-            arabic_name: data.arabic_name,
-            address_arabic_main: data.address_arabic_main
+            arabic_name: arabic_name,
+            address_arabic_main: address_arabic_main
         });
 
         if (existing_service) {
@@ -246,8 +263,21 @@ const add_service_to_main = async (req, res) => {
 
                            
                             const newService = new Services({
-                                ...data,
-                                image: publicUrl
+                                   arabic_name,
+                                   english_name,
+                                   address_arabic_main,
+                                   address_english_main,
+                                   address_arabic_sub, 
+                                   address_english_sub, 
+                                   youtube_number, 
+                                   instagram_number ,
+                                   twitter_number,
+                                   snap_number,
+                                   tiktok_number,
+                                   linkedin_number, 
+                                   note,  
+                                   price,
+                                   image: publicUrl
                             });
 
                         
@@ -270,6 +300,14 @@ const add_service_to_main = async (req, res) => {
                                 });
                             });
 
+                              bunch.forEach(bunch => {
+                                newService.bunch.push({
+                                    name: bunch.name,
+                                    description: bunch.description,
+                                    price: bunch.price,
+                                   
+                                });
+                            });
                          
                             await newService.save();
 
@@ -285,7 +323,22 @@ const add_service_to_main = async (req, res) => {
             }
         } else {
             
-            const newService = new Services(data);
+                             const newService = new Services({
+                                   arabic_name,
+                                   english_name,
+                                   address_arabic_main,
+                                   address_english_main,
+                                   address_arabic_sub, 
+                                   address_english_sub, 
+                                   youtube_number, 
+                                   instagram_number ,
+                                   twitter_number,
+                                   snap_number,
+                                   tiktok_number,
+                                   linkedin_number, 
+                                   note,  
+                                   price
+                            });
 
            
             Q_A.forEach(Question => {
@@ -307,7 +360,15 @@ const add_service_to_main = async (req, res) => {
                 });
             });
 
-         
+                              bunch.forEach(bunch => {
+                                newService.bunch.push({
+                                    name: bunch.name,
+                                    description: bunch.description,
+                                    price: bunch.price,
+                                   
+                                });
+                            });
+            
             await newService.save();
 
            
