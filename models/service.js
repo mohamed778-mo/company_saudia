@@ -61,6 +61,10 @@ const serviceSchema = new mongoose.Schema({
         default:' '
       
       }, 
+    image:{
+        type:String,
+        default:'empty'
+      }, 
     price:{
         type:Number,
         required:true   
