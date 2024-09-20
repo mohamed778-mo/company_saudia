@@ -25,7 +25,11 @@ const {
  const {  
   get_all_forms,
   delete_form,
-  delete_all_form
+  delete_all_form,
+   
+  get_all_contact_forms,
+  delete_contact_form,
+  delete_all_contact_form
 }=require('../controllers/web_control')
 
 
@@ -65,5 +69,8 @@ router.get('/get_all_forms',adminAuth, setLanguage, get_all_forms);
 router.delete('/delete_form:/form_id', adminAuth, delete_form);
 router.delete('/delete_all_form',adminAuth,  delete_all_form);
 
+router.get('/get_all_contact_forms',adminAuth, setLanguage, get_all_contact_forms);
+router.delete('/delete_contact_form:/form_id', adminAuth, delete_contact_form);
+router.delete('/delete_all_contact_form',adminAuth,  delete_all_contact_form);
 
 module.exports = router;
