@@ -79,6 +79,7 @@ const transporter = nodemailer.createTransport({
     res.status(200).send('تم تسجيل طلبك')
 
     }
+    
 }catch(e){
     res.status(500).send(e.message)
 }
@@ -175,7 +176,7 @@ const transporter = nodemailer.createTransport({
 
         
     res.status(200).send('تم تسجيل الاستماره بنجاح')
-    }
+    
 }catch(e){
     res.status(500).send(e.message)
 }
