@@ -3,6 +3,8 @@ const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Services = require("../models/service");
 const Main = require("../models/main");
+const admin = require('firebase-admin');
+const fs = require('fs');
 require("dotenv").config();
 
 const serviceAccount =JSON.parse(process.env.SERVER)
