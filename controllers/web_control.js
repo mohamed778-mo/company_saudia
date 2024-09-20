@@ -232,6 +232,22 @@ const delete_all_contact_form=async (req,res)=>{
                 
             }
 
+const get_contact_form=async (req,res)=>{
+        try{
+        const form_id = req.params.form_id
+        const data = await Form.findById(form_id)
+        if(!data){
+            return res.status(400).send(" no forms !!")
+        }
+
+            res.status(200).send(data)
+        
+        }catch(e){
+            res.status(500).send(e.message)
+        }
+            
+            
+        }
 
 
             module.exports={
@@ -243,6 +259,7 @@ const delete_all_contact_form=async (req,res)=>{
                 create_contact_form,
                 get_all_contact_forms,
                 delete_contact_form,
-                delete_all_contact_form
+                delete_all_contact_form,
+                get_contact_form
 
             }
