@@ -320,7 +320,7 @@ const file = req.files.find(f => f.fieldname === 'file')
         
         
     } catch (error) {
-        res.status(500).json({ message: 'Error adding new service', error });
+        res.status(500).json( error.message );
     }
 };
 
