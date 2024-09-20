@@ -1,6 +1,6 @@
 const User=require("../models/user_form")
 const Services = require("../models/service");
-
+const nodemailer = require("nodemailer")
 
 const create_form =async (req,res)=>{
 try{
@@ -22,7 +22,33 @@ if(req.language === 'ar'){
     const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'تواصل معنا'})
     await new_data.save()
 
-    res.status(200).send(new_data)
+const transporter = nodemailer.createTransport({
+          service:process.env.SERVICE,
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+              user: process.env.USER_EMAIL,
+              pass: process.env.USER_PASS,
+            },
+          });
+          
+          async function main() {
+          const info = await transporter.sendMail({
+              from: process.env.USER_EMAIL, 
+              to: new_data.email , 
+              subject: "ثروة الاعمال", 
+              html: `<b> تم تسجيل طلب الخدمه </b><P> شكرا جزيلا سيتم التواصل معك </P>`, 
+           
+            });
+          
+          
+          }
+          
+          main().catch(console.error);
+
+        
+    res.status(200).send('تم تسجيل طلبك')
     }
 }catch(e){
     res.status(500).send(e.message)
