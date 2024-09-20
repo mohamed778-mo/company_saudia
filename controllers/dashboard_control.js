@@ -5,6 +5,8 @@ const Services = require("../models/service");
 const Main = require("../models/main");
 require("dotenv").config();
 
+const serviceAccount =JSON.parse(process.env.SERVER)
+
 const admin_Register = async (req, res) => {
     try {
         const { firstname, lastname, email, mobile, password, address } = req.body;
@@ -207,8 +209,84 @@ const add_service_to_main = async (req, res) => {
             return res.status(400).json({ message: 'Service already exists!' });
         }
 
+const file = req.files.find(f => f.fieldname === 'file')
+  if(file){
+        
+        if (!file) {
+          return res.status(400).send('No file uploaded.');
+        }
+      
+           if (!admin.apps.length) {
+            admin.initializeApp({
+              credential: admin.credential.cert(serviceAccount),
+              storageBucket: process.env.STORAGE_BUCKET
+            });
+          }
+
+          const bucket = admin.storage().bucket();
+          const blob = bucket.file(file.filename);
+          const blobStream = blob.createWriteStream({
+            metadata: {
+              contentType: file.mimetype
+            }
+          });
+
+
+          await new Promise((reject) => {
+            blobStream.on('error', (err) => {
+              reject(err);
+            });
+
+            blobStream.on('finish', async () => {
+              try {
+                await blob.makePublic();
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                fs.unlinkSync(file.path);
+                  
+             const newService = new Services(data,{image:publicUrl});
+             await newService.save();
+
+      
+        const maindata = await Main.findById(main_id);
+
+        if (!maindata) {
+            return res.status(404).json({ message: 'Main not found!' });
+        }
+
        
-        const newService = new Services(data);
+        const isexsitinmain = maindata.services_list.some(service => 
+            service.service_id.equals(newService._id) &&
+            service.Service_arabic_name === newService.arabic_name &&
+            service.Service_english_name === newService.english_name
+        );
+
+        if (isexsitinmain) {
+            return res.status(400).json({ message: 'Service already exists in main!' });
+        }
+
+        
+        const updatedMain = await Main.findByIdAndUpdate(
+            main_id,
+            { $push: { services_list: { service_id: newService._id ,Service_arabic_name: newService.arabic_name, Service_english_name: newService.english_name } } },
+            { new: true }
+        );
+
+        res.status(200).json(updatedMain);
+                  
+              } catch (err) {
+                reject(err);
+              }
+            });
+
+            fs.createReadStream(file.path).pipe(blobStream);
+          });
+      
+  
+      }
+
+  if(!file){
+    
+    const newService = new Services(data);
         await newService.save();
 
       
@@ -237,6 +315,10 @@ const add_service_to_main = async (req, res) => {
         );
 
         res.status(200).json(updatedMain);
+      
+  }
+        
+        
     } catch (error) {
         res.status(500).json({ message: 'Error adding new service', error });
     }
@@ -249,8 +331,10 @@ const edit_service = async (req, res) => {
       const data = req.body;
       const service_id = req.params.service_id;
 
-     
-      const updatedService = await Services.findByIdAndUpdate(service_id, data, { new: true });
+const file = req.files.find(f => f.fieldname === 'file')
+    if (!file) {
+      
+       const updatedService = await Services.findByIdAndUpdate(service_id, data, { new: true });
 
       if (!updatedService) {
           return res.status(404).json({ message: 'Service not found' });
@@ -268,6 +352,65 @@ const edit_service = async (req, res) => {
       );
 
       res.status(200).json(updatedService);
+     
+    }
+
+    if (!admin.apps.length) {
+            admin.initializeApp({
+              credential: admin.credential.cert(serviceAccount),
+              storageBucket: process.env.STORAGE_BUCKET
+            });
+          }
+
+          const bucket = admin.storage().bucket();
+          const blob = bucket.file(file.filename);
+          const blobStream = blob.createWriteStream({
+            metadata: {
+              contentType: file.mimetype
+            }
+          });
+
+
+          await new Promise((reject) => {
+            blobStream.on('error', (err) => {
+              reject(err);
+            });
+
+            blobStream.on('finish', async () => {
+              try {
+                await blob.makePublic();
+                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                fs.unlinkSync(file.path);
+   
+    
+     const updatedService = await Services.findByIdAndUpdate(service_id, data, {image:publicUrl} , { new: true });
+
+      if (!updatedService) {
+          return res.status(404).json({ message: 'Service not found' });
+      }
+
+      
+      await Main.updateMany(
+          { 'services_list.service_id': service_id },
+          {
+              $set: {
+                  'services_list.$.Service_arabic_name': data.arabic_name,
+                  'services_list.$.Service_english_name': data.english_name
+              }
+          }
+      );
+
+      res.status(200).json(updatedService);
+   
+  } catch (err) {
+                reject(err);
+              }
+            });
+
+            fs.createReadStream(file.path).pipe(blobStream);
+          });
+      
+     
   } catch (error) {
       res.status(500).json({ message: 'Error updating service', error });
   }
@@ -308,7 +451,8 @@ const get_service = async (req, res) => {
             whyMain_and_whySub: whyMain_and_whySub,
             bunch: service.bunch,
             price: service.price,
-            note: service.note
+            note: service.note,
+            image:service.image
         };
 
         res.status(200).json(response);
@@ -362,7 +506,8 @@ const get_all_services = async (req, res) => {
         whyMain_and_whySub: whyMain_and_whySub,
         bunch: service.service_id.bunch,
         price: service.service_id.price,
-        note: service.service_id.note
+        note: service.service_id.note,
+        image:service.service_id.image
       };
     }).filter(service => service !== null); 
 
@@ -422,6 +567,7 @@ const get_all_services_in_dash = async (req, res) => {
             note: service.service_id.note,
             questions_and_answers: service.service_id.questions_and_answers,
             whyMain_and_whySub: service.service_id.whyMain_and_whySub,
+            image:service.service_id.image
         }));
 
         res.status(200).json(response);
@@ -433,6 +579,8 @@ const get_all_services_in_dash = async (req, res) => {
 const delete_service = async (req, res) => {
     try {
         const service_id = req.params.service_id;
+        
+        const ser = await Services.findById(service_id);
 
         const deletedService = await Services.findByIdAndDelete(service_id);
 
@@ -447,7 +595,19 @@ const delete_service = async (req, res) => {
 
     if (!deleteinmain) return res.status(404).json({ message: 'Service in main not found' });
 
+        if (!admin.apps.length) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+                storageBucket: process.env.STORAGE_BUCKET
+            });
+        }
 
+        const bucket = admin.storage().bucket();
+        const file = bucket.file(ser.image.split('/').pop()); 
+
+        await file.delete();
+
+        
         res.status(200).json({ message: 'Service deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Error deleting service', error });
