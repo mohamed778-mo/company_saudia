@@ -204,7 +204,7 @@ const add_service_to_main = async (req, res) => {
         const Q_A = JSON.parse(data.questions_and_answers || '[]');
         const M_S = JSON.parse(data.whyMain_and_whySub || '[]');
 
-        // Check if service already exists
+    
         const existing_service = await Services.findOne({
             arabic_name: data.arabic_name,
             address_arabic_main: data.address_arabic_main
@@ -214,7 +214,7 @@ const add_service_to_main = async (req, res) => {
             return res.status(400).json({ message: 'Service already exists!' });
         }
 
-        // Initialize Firebase storage only if needed
+       
         if (req.files && req.files.length > 0) {
             const file = req.files.find(f => f.fieldname === 'file');
             if (file) {
