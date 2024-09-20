@@ -142,9 +142,9 @@ const delete_all_form=async (req,res)=>{
 
 const create_contact_form =async (req,res)=>{
 try{
-    const {firstName,lastName,email,phone,linkedin,twitter,country,city,agree,meetingPurpose,meetingType,otherPurpose} = req.body
+    const {firstName,lastName,email,phone,linkedin,twitter,country,city,agree,meetingPurpose,meetingType,otherPurpose ,isIndividual ,companyName,companyWebsite} = req.body
 
-    const new_data = new Form({firstName,lastName,email,phone,linkedin,twitter,country,city,agree,meetingPurpose,meetingType,otherPurpose})
+    const new_data = new Form({firstName,lastName,email,phone,linkedin,twitter,country,city,agree,meetingPurpose,meetingType,otherPurpose,isIndividual ,companyName,companyWebsite})
     await new_data.save()
 
 const transporter = nodemailer.createTransport({
