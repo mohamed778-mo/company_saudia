@@ -201,6 +201,9 @@ const add_service_to_main = async (req, res) => {
         const data = req.body;
         const main_id = req.params.main_id;
 
+        const Q_A = JSON.parse(data.questions_and_answers)
+        const M_S = JSON.parse(data.whyMain_and_whySub)
+        
         
         const exsit_service = await Services.findOne({
             arabic_name: data.arabic_name,
@@ -210,7 +213,16 @@ const add_service_to_main = async (req, res) => {
         if (exsit_service) {
             return res.status(400).json({ message: 'Service already exists!' });
         }
+if (Array.isArray(Q_A) && Q_A.length > 0) {
+      for (let i = 0; i < Q_A.length; i++) {
+        const Question = Q_A[i];
+        let newQuestion;
 
+if (Array.isArray(M_S) && M_S.length > 0) {
+      for (let i = 0; i < M_S.length; i++) {
+        const Why = M_S[i];
+        let newWhy;
+        
 const file = req.files.find(f => f.fieldname === 'file')
   if(file){
         
@@ -246,6 +258,25 @@ const file = req.files.find(f => f.fieldname === 'file')
                 fs.unlinkSync(file.path);
                   
              const newService = new Services(data,{image:publicUrl});
+
+                  newQuestion = {
+                  question_english: Question.question_english,
+                  question_arabic: Question.question_arabic,         
+                  answer_english: Question.answer_english,
+                  answer_arabic:Question.answer_arabic,
+                
+                };
+                newService.questions_and_answers.push(newQuestion);
+
+                       newWhy = {
+                  why_main_arabic: Why.why_main_arabic,
+                  why_main_english: Why.why_main_english,         
+                  why_sub_arabic: Why.why_sub_arabic,
+                  why_sub_english:Why.why_sub_english,
+                
+                };
+                newService.whyMain_and_whySub.push(newWhy);
+                  
              await newService.save();
 
       
