@@ -201,142 +201,140 @@ const add_service_to_main = async (req, res) => {
         const data = req.body;
         const main_id = req.params.main_id;
 
-        const Q_A = JSON.parse(data.questions_and_answers)
-        const M_S = JSON.parse(data.whyMain_and_whySub)
-        
-        
-        const exsit_service = await Services.findOne({
+        const Q_A = JSON.parse(data.questions_and_answers || '[]');
+        const M_S = JSON.parse(data.whyMain_and_whySub || '[]');
+
+        // Check if service already exists
+        const existing_service = await Services.findOne({
             arabic_name: data.arabic_name,
             address_arabic_main: data.address_arabic_main
         });
 
-        if (exsit_service) {
+        if (existing_service) {
             return res.status(400).json({ message: 'Service already exists!' });
         }
-if (Array.isArray(Q_A) && Q_A.length > 0) {
-      for (let i = 0; i < Q_A.length; i++) {
-        const Question = Q_A[i];
-        let newQuestion;
 
-if (Array.isArray(M_S) && M_S.length > 0) {
-      for (let i = 0; i < M_S.length; i++) {
-        const Why = M_S[i];
-        let newWhy;
-        
-const file = req.files.find(f => f.fieldname === 'file')
-  if(file){
-        
-        if (!file) {
-          return res.status(400).send('No file uploaded.');
-        }
-      
-           if (!admin.apps.length) {
-            admin.initializeApp({
-              credential: admin.credential.cert(serviceAccount),
-              storageBucket: process.env.STORAGE_BUCKET
-            });
-          }
+        // Initialize Firebase storage only if needed
+        if (req.files && req.files.length > 0) {
+            const file = req.files.find(f => f.fieldname === 'file');
+            if (file) {
+                if (!admin.apps.length) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert(serviceAccount),
+                        storageBucket: process.env.STORAGE_BUCKET
+                    });
+                }
 
-          const bucket = admin.storage().bucket();
-          const blob = bucket.file(file.filename);
-          const blobStream = blob.createWriteStream({
-            metadata: {
-              contentType: file.mimetype
-            }
-          });
+                const bucket = admin.storage().bucket();
+                const blob = bucket.file(file.filename);
+                const blobStream = blob.createWriteStream({
+                    metadata: {
+                        contentType: file.mimetype
+                    }
+                });
 
-
-          await new Promise((reject) => {
+               await new Promise((resolve, reject) => {
             blobStream.on('error', (err) => {
               reject(err);
             });
 
-            blobStream.on('finish', async () => {
-              try {
-                await blob.makePublic();
-                const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-                fs.unlinkSync(file.path);
-                  
-             const newService = new Services(data,{image:publicUrl});
+                    blobStream.on('finish', async () => {
+                        try {
+                            await blob.makePublic();
+                            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                            fs.unlinkSync(file.path); 
 
-                  newQuestion = {
-                  question_english: Question.question_english,
-                  question_arabic: Question.question_arabic,         
-                  answer_english: Question.answer_english,
-                  answer_arabic:Question.answer_arabic,
-                
-                };
-                newService.questions_and_answers.push(newQuestion);
+                           
+                            const newService = new Services({
+                                ...data,
+                                image: publicUrl
+                            });
 
-                       newWhy = {
-                  why_main_arabic: Why.why_main_arabic,
-                  why_main_english: Why.why_main_english,         
-                  why_sub_arabic: Why.why_sub_arabic,
-                  why_sub_english:Why.why_sub_english,
-                
-                };
-                newService.whyMain_and_whySub.push(newWhy);
-                  
-             await newService.save();
+                        
+                            Q_A.forEach(Question => {
+                                newService.questions_and_answers.push({
+                                    question_english: Question.question_english,
+                                    question_arabic: Question.question_arabic,
+                                    answer_english: Question.answer_english,
+                                    answer_arabic: Question.answer_arabic
+                                });
+                            });
 
-      
-        const maindata = await Main.findById(main_id);
+                          
+                            M_S.forEach(Why => {
+                                newService.whyMain_and_whySub.push({
+                                    why_main_arabic: Why.why_main_arabic,
+                                    why_main_english: Why.why_main_english,
+                                    why_sub_arabic: Why.why_sub_arabic,
+                                    why_sub_english: Why.why_sub_english
+                                });
+                            });
 
-        if (!maindata) {
-            return res.status(404).json({ message: 'Main not found!' });
+                         
+                            await newService.save();
+
+                            
+                            await addServiceToMain(newService, main_id, res);
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+
+                    fs.createReadStream(file.path).pipe(blobStream);
+                });
+            }
+        } else {
+            
+            const newService = new Services(data);
+
+           
+            Q_A.forEach(Question => {
+                newService.questions_and_answers.push({
+                    question_english: Question.question_english,
+                    question_arabic: Question.question_arabic,
+                    answer_english: Question.answer_english,
+                    answer_arabic: Question.answer_arabic
+                });
+            });
+
+         
+            M_S.forEach(Why => {
+                newService.whyMain_and_whySub.push({
+                    why_main_arabic: Why.why_main_arabic,
+                    why_main_english: Why.why_main_english,
+                    why_sub_arabic: Why.why_sub_arabic,
+                    why_sub_english: Why.why_sub_english
+                });
+            });
+
+         
+            await newService.save();
+
+           
+            await addServiceToMain(newService, main_id, res);
         }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
-       
-        const isexsitinmain = maindata.services_list.some(service => 
-            service.service_id.equals(newService._id) &&
-            service.Service_arabic_name === newService.arabic_name &&
-            service.Service_english_name === newService.english_name
-        );
 
-        if (isexsitinmain) {
-            return res.status(400).json({ message: 'Service already exists in main!' });
+const addServiceToMain = async (newService, main_id, res) => {
+    try {
+        const mainData = await Main.findById(main_id);
+
+        if (!mainData) {
+            return res.status(404).json({ message: 'Main not found!' });
         }
 
         
-        const updatedMain = await Main.findByIdAndUpdate(
-            main_id,
-            { $push: { services_list: { service_id: newService._id ,Service_arabic_name: newService.arabic_name, Service_english_name: newService.english_name } } },
-            { new: true }
-        );
-
-        res.status(200).json(updatedMain);
-                  
-              } catch (err) {
-                reject(err);
-              }
-            });
-
-            fs.createReadStream(file.path).pipe(blobStream);
-          });
-      
-  
-      }
-
-  if(!file){
-    
-    const newService = new Services(data);
-        await newService.save();
-
-      
-        const maindata = await Main.findById(main_id);
-
-        if (!maindata) {
-            return res.status(404).json({ message: 'Main not found!' });
-        }
-
-       
-        const isexsitinmain = maindata.services_list.some(service => 
+        const existingServiceInMain = mainData.services_list.some(service =>
             service.service_id.equals(newService._id) &&
             service.Service_arabic_name === newService.arabic_name &&
             service.Service_english_name === newService.english_name
         );
 
-        if (isexsitinmain) {
+        if (existingServiceInMain) {
             return res.status(400).json({ message: 'Service already exists in main!' });
         }
 
@@ -347,15 +345,12 @@ const file = req.files.find(f => f.fieldname === 'file')
             { new: true }
         );
 
-        res.status(200).json(updatedMain);
-      
-  }
-        
-        
+        return res.status(200).json(updatedMain);
     } catch (error) {
-        res.status(500).json( error.message );
+        return res.status(500).json({ message: error.message });
     }
 };
+
 
 
 
