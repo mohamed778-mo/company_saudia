@@ -39,7 +39,7 @@ var formSchema = new mongoose.Schema({
         default:' لا يوجد '
     }, 
     agree: { 
-        type: Boolean
+        type: Boolean,
     }, 
     meetingPurpose:{
         type: String, 
@@ -50,6 +50,18 @@ var formSchema = new mongoose.Schema({
         required: true 
     },
    otherPurpose:{
+        type: String, 
+        
+    },
+   isIndividual:{
+        type: String, 
+        
+    },
+   companyName:{
+        type: String, 
+        
+    },
+ companyWebsite:{
         type: String, 
         
     },
