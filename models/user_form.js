@@ -27,24 +27,25 @@ var userSchema = new mongoose.Schema({
         },
     country:{ 
         type: String, 
+        default:'لا يوجد'
        
         
     },
     city:{ 
         type: String, 
-       
+       default:'لا يوجد'
     },
     job:{ 
         type: String, 
-       
+       default:'لا يوجد'
     }, 
     number_of_identity:{ 
         type: String, 
-        
+        default:'لا يوجد'
     }, 
     message:{ 
         type: String, 
-        
+        default:'لا يوجد'
     }, 
     service_name:{
         type: String, 
