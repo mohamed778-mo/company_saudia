@@ -12,7 +12,7 @@ try{
     
    
    
-    if(service_id !== 1 ){
+    if(service_id){
    const service_data =await Services.findById(service_id)
         let service_name;
 
