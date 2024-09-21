@@ -570,7 +570,29 @@ const edit_service = async (req, res) => {
 };
 
 
+const updateServiceInMain = async (updatedService, res) => {
+    try {
+        const mainData = await Main.findOne({ 'services_list.service_id': updatedService._id });
 
+        if (!mainData) {
+            return res.status(404).json({ message: 'Main not found!' });
+        }
+
+        await Main.updateOne(
+            { 'services_list.service_id': updatedService._id },
+            { 
+                $set: { 
+                    'services_list.$.Service_arabic_name': updatedService.arabic_name,
+                    'services_list.$.Service_english_name': updatedService.english_name
+                }
+            }
+        );
+
+        return res.status(200).json({ message: 'Service updated successfully!' });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
 
 
 
