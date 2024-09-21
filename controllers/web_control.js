@@ -64,7 +64,7 @@ try{
 const createformother = async (req,res)=>{
     try{
     const data = req.body
-    const new_data = new User(data,{ service_name:'اقتراح او شكوى'})
+    const new_data = new User(data)
     await new_data.save()
         
 const transporter = nodemailer.createTransport({
