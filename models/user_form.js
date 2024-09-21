@@ -49,7 +49,7 @@ var userSchema = new mongoose.Schema({
     }, 
     service_name:{
         type: String, 
-        required: true 
+        default:'اقتراح او شكوى'
     }
  
 
