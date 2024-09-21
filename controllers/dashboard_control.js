@@ -488,9 +488,8 @@ if (req.files && req.files.length > 0) {
 
                         
                            const new_service = await Services.findByIdAndUpdate(service_id,{image:publicUrl},{new:true});
-                           await new_service.save()
-                            
-                console.log('sss')
+                         console.log(new_service)
+                
                             
                         } catch (err) {
                             reject(err);
