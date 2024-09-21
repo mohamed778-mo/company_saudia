@@ -499,10 +499,87 @@ if (req.files && req.files.length > 0) {
                     fs.createReadStream(file.path).pipe(blobStream);
     
    })
+
+
+existing_service.arabic_name = arabic_name || existing_service.arabic_name;
+        existing_service.english_name = english_name || existing_service.english_name;
+        existing_service.address_arabic_main = address_arabic_main || existing_service.address_arabic_main;
+        existing_service.address_english_main = address_english_main || existing_service.address_english_main;
+        existing_service.address_arabic_sub = address_arabic_sub || existing_service.address_arabic_sub;
+        existing_service.address_english_sub = address_english_sub || existing_service.address_english_sub;
+        existing_service.youtube_number = youtube_number || existing_service.youtube_number;
+        existing_service.instagram_number = instagram_number || existing_service.instagram_number;
+        existing_service.twitter_number = twitter_number || existing_service.twitter_number;
+        existing_service.snap_number = snap_number || existing_service.snap_number;
+        existing_service.tiktok_number = tiktok_number || existing_service.tiktok_number;
+        existing_service.linkedin_number = linkedin_number || existing_service.linkedin_number;
+        existing_service.note = note || existing_service.note;
+        existing_service.price = price || existing_service.price;
+
+     
+        if (Q_A && Q_A.length > 0) {
+            existing_service.questions_and_answers = [];
+            Q_A.forEach(Question => {
+                existing_service.questions_and_answers.push({
+                    question_english: Question.question_english,
+                    question_arabic: Question.question_arabic,
+                    answer_english: Question.answer_english,
+                    answer_arabic: Question.answer_arabic
+                });
+            });
+        }
+
+ 
+        if (M_S && M_S.length > 0) {
+            existing_service.whyMain_and_whySub = [];
+            M_S.forEach(Why => {
+                existing_service.whyMain_and_whySub.push({
+                    why_main_arabic: Why.why_main_arabic,
+                    why_main_english: Why.why_main_english,
+                    why_sub_arabic: Why.why_sub_arabic,
+                    why_sub_english: Why.why_sub_english
+                });
+            });
+        }
+
+       
+        if (bunch_data && bunch_data.length > 0) {
+            existing_service.bunch = [];
+            bunch_data.forEach(b => {
+                existing_service.bunch.push({
+                    name: b.name,
+                    description: b.description,
+                    price: b.price
+                });
+            });
+        }
+
+        await existing_service.save();
+
+      console.log('ss')
+const mainData = await Main.findOne({ 'services_list.service_id': existing_service._id });
+
+        if (!mainData) {
+            return res.status(404).json({ message: 'Main not found!' });
+        }
+
+        await Main.updateOne(
+            { 'services_list.service_id': existing_service._id },
+            { 
+                $set: { 
+                    'services_list.$.Service_arabic_name': existing_service.arabic_name,
+                    'services_list.$.Service_english_name': existing_service.english_name
+                }
+            }
+        );
+      console.log('ssss')
+
+     res.status(200).json({ message: 'Service updated successfully!' });
+                
             }
             }
 
-                console.log('sss')
+        if(!file){
       
         existing_service.arabic_name = arabic_name || existing_service.arabic_name;
         existing_service.english_name = english_name || existing_service.english_name;
@@ -578,6 +655,7 @@ const mainData = await Main.findOne({ 'services_list.service_id': existing_servi
       console.log('ssss')
 
      res.status(200).json({ message: 'Service updated successfully!' });
+        }
         
     } catch (error) {
         res.status(500).json({ message: error.message });
