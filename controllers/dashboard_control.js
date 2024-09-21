@@ -450,8 +450,8 @@ const edit_service = async (req, res) => {
             return res.status(404).json({ message: 'Service not found!' });
         }
 
-        if (req.files && req.files.length > 0) {
             const file = req.files.find(f => f.fieldname === 'file');
+            console.log(file)
             if (file) {
            
                 if (existing_service.image && existing_service.image !== 'empty') {
@@ -505,7 +505,7 @@ const edit_service = async (req, res) => {
                     fs.createReadStream(file.path).pipe(blobStream);
                 });
             }
-        }
+        
 
       
         existing_service.arabic_name = arabic_name || existing_service.arabic_name;
