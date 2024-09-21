@@ -458,7 +458,14 @@ if (req.files && req.files.length > 0) {
             const file = req.files.find(f => f.fieldname === 'file');
             console.log(file)
             if (file) {
-           
+
+                   if (!admin.apps.length) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert(serviceAccount),
+                        storageBucket: 'gs://tharwahb-72cd9.appspot.com'
+                    });
+                }
+                
                 if (existing_service.image && existing_service.image !== 'empty') {
                     const oldImageUrl = existing_service.image;
                     const oldImageName = oldImageUrl.split('/').pop();
@@ -473,13 +480,6 @@ if (req.files && req.files.length > 0) {
                     }
                 }
 
-      
-                if (!admin.apps.length) {
-                    admin.initializeApp({
-                        credential: admin.credential.cert(serviceAccount),
-                        storageBucket: process.env.STORAGE_BUCKET
-                    });
-                }
 
                 const bucket = admin.storage().bucket();
                 const blob = bucket.file(file.filename);
