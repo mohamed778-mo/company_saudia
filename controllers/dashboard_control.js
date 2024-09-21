@@ -452,7 +452,7 @@ const edit_service = async (req, res) => {
        
         
         
-if (req.files && req.files.length > 0) {
+
             const file = req.files.find(f => f.fieldname === 'file');
            
             if (file) {
@@ -577,9 +577,8 @@ const mainData = await Main.findOne({ 'services_list.service_id': existing_servi
      res.status(200).json({ message: 'Service updated successfully!' });
                 
             }
-            }
-
-        if(!file){
+            
+if(!file){
       
         existing_service.arabic_name = arabic_name || existing_service.arabic_name;
         existing_service.english_name = english_name || existing_service.english_name;
