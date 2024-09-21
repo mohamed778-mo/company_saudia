@@ -9,10 +9,14 @@ const create_form =async (req,res)=>{
 try{
     const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
     const service_id = req.params.service_id
-    if(service_id){
+    
     const service_data =await Services.findById(service_id)
-    let service_name;
-if(req.language === 'ar'){
+   
+    if(service_data){
+   
+        let service_name;
+
+    if(req.language === 'ar'){
      service_name =service_data.arabic_name
 }else{
      service_name =service_data.english_name
