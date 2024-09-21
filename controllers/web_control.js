@@ -10,10 +10,10 @@ try{
     const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
     const service_id = req.params.service_id
     
-    const service_data =await Services.findById(service_id)
    
-    if(service_data){
    
+    if(service_id !== 1 ){
+   const service_data =await Services.findById(service_id)
         let service_name;
 
     if(req.language === 'ar'){
@@ -47,7 +47,10 @@ try{
           
           }
           
-          main().catch(console.error);
+      main().catch((error) => {
+    res.status(400).send("Failed to send email:", error);
+});
+
 
         
     res.status(200).send('تم تسجيل طلبك')
@@ -77,7 +80,10 @@ const transporter = nodemailer.createTransport({
           
           }
           
-          main().catch(console.error);
+          main().catch((error) => {
+    res.status(400).send("Failed to send email:", error);
+});
+
 
         
     res.status(200).send('تم تسجيل طلبك')
@@ -174,7 +180,9 @@ const transporter = nodemailer.createTransport({
           
           }
           
-          main().catch(console.error);
+             main().catch((error) => {
+    res.status(400).send("Failed to send email:", error);
+});
 
         
     res.status(200).send('تم تسجيل الاستماره بنجاح')
