@@ -10,10 +10,10 @@ try{
     const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
     const service_id = req.params.service_id
     
-   
-   
-    if(service_id){
    const service_data =await Services.findById(service_id)
+   
+    if(service_data){
+
         let service_name;
 
     if(req.language === 'ar'){
@@ -54,9 +54,19 @@ try{
 
         
     res.status(200).send('تم تسجيل طلبك')
-    }else{
-    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity ,message, service_name:'اقتراح او شكوى'})
+    }
+    
+}catch(e){
+    res.status(500).send(e.message)
+}
+}
+
+const createformother = async (req,res)=>{
+    try{
+    const data = req.body
+    const new_data = new User(data,{ service_name:'اقتراح او شكوى'})
     await new_data.save()
+        
 const transporter = nodemailer.createTransport({
           service:process.env.SERVICE,
           host: "smtp.gmail.com",
@@ -88,14 +98,15 @@ const transporter = nodemailer.createTransport({
         
     res.status(200).send('تم تسجيل طلبك')
 
+    
+      
+    }catch(e){
+        res.status(500).send(e.message)
     }
-    
-}catch(e){
-    res.status(500).send(e.message)
-}
-    
-    
-}
+            
+    }
+
+
 
 
 const get_all_forms =async (req,res)=>{
@@ -272,6 +283,7 @@ const get_contact_form=async (req,res)=>{
                 get_all_contact_forms,
                 delete_contact_form,
                 delete_all_contact_form,
-                get_contact_form
+                get_contact_form,
+                createformother
 
             }
