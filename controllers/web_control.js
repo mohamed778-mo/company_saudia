@@ -161,13 +161,12 @@ const delete_all_form=async (req,res)=>{
 
 
 
-const create_contact_form =async (req,res)=>{
-try{
+const create_contact_form = async (req,res)=>{
+    try{
     const data = req.body
-
     const new_data = new Form(data)
     await new_data.save()
-
+        
 const transporter = nodemailer.createTransport({
           service:process.env.SERVICE,
           host: "smtp.gmail.com",
@@ -191,19 +190,21 @@ const transporter = nodemailer.createTransport({
           
           }
           
-             main().catch((error) => {
+          main().catch((error) => {
     res.status(400).send("Failed to send email:", error);
 });
 
+
         
-    res.status(200).send('تم تسجيل الاستماره بنجاح')
+    res.status(200).send('تم تسجيل طلبك')
+
     
-}catch(e){
-    res.status(500).send(e.message)
-}
-    
-    
-}
+      
+    }catch(e){
+        res.status(500).send(e.message)
+    }
+            
+    }
 
 
 const get_all_contact_forms =async (req,res)=>{
