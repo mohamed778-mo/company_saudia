@@ -460,9 +460,10 @@ if (req.files && req.files.length > 0) {
                  if (!admin.apps.length) {
                     admin.initializeApp({
                         credential: admin.credential.cert(serviceAccount),
-                        storageBucket: 'gs://tharwahb-72cd9.appspot.com'
+                       storageBucket: process.env.STORAGE_BUCKET
                     });
                 }
+                console.log('sss')
                     const bucket = admin.storage().bucket();
 
                 
@@ -470,15 +471,18 @@ if (req.files && req.files.length > 0) {
                     
 
                     
-                    const file = bucket.file(existing_service.image.split('/').pop()); 
+                    const file_b = bucket.file(existing_service.image.split('/').pop()); 
+                    
+                console.log('sss')
                     
                     try {
-                          await file.delete();
+                          await file_b.delete();
                     } catch (error) {
                         console.log("Error deleting old image:", error.message);
                     }
                 }
                 
+                console.log('sss')
 
           
                 const blob = bucket.file(file.filename);
@@ -493,6 +497,7 @@ if (req.files && req.files.length > 0) {
               reject(err);
             });
 
+                console.log('sss')
 
                     blobStream.on('finish', async () => {
                         try {
@@ -502,6 +507,8 @@ if (req.files && req.files.length > 0) {
 
                         
                             existing_service.image = publicUrl;
+                console.log('sss')
+                            
                         } catch (err) {
                             reject(err);
                         }
