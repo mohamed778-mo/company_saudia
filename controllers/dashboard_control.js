@@ -456,13 +456,6 @@ if (req.files && req.files.length > 0) {
             const file = req.files.find(f => f.fieldname === 'file');
            
             if (file) {
-
-                   if (!admin.apps.length) {
-                    admin.initializeApp({
-                        credential: admin.credential.cert(serviceAccount),
-                        storageBucket: 'gs://tharwahb-72cd9.appspot.com'
-                    });
-                }
                 
                 if (existing_service.image && existing_service.image !== 'empty') {
                     const oldImageUrl = existing_service.image;
@@ -477,7 +470,13 @@ if (req.files && req.files.length > 0) {
                         console.log("Error deleting old image:", error.message);
                     }
                 }
-
+                
+ if (!admin.apps.length) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert(serviceAccount),
+                        storageBucket: 'gs://tharwahb-72cd9.appspot.com'
+                    });
+                }
 
                 const bucket = admin.storage().bucket();
                 const blob = bucket.file(file.filename);
@@ -487,10 +486,10 @@ if (req.files && req.files.length > 0) {
                     }
                 });
 
-                await new Promise((resolve, reject) => {
-                    blobStream.on('error', (err) => {
-                        reject(err);
-                    });
+               blobStream.on('error', (err) => {
+      console.error(err);
+      res.status(500).send('Error uploading file.');
+    });
 
                     blobStream.on('finish', async () => {
                         try {
@@ -506,9 +505,9 @@ if (req.files && req.files.length > 0) {
                     });
 
                     fs.createReadStream(file.path).pipe(blobStream);
-                });
+        
             }
-                    }
+            }
 
       
         existing_service.arabic_name = arabic_name || existing_service.arabic_name;
