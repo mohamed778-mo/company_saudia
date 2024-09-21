@@ -438,8 +438,8 @@ const edit_service = async (req, res) => {
         } = req.body;
         
         const service_id = req.params.service_id;
-        
-  
+
+      
         const Q_A = typeof questions_and_answers === 'string' ? JSON.parse(questions_and_answers) : questions_and_answers;
         const M_S = typeof whyMain_and_whySub === 'string' ? JSON.parse(whyMain_and_whySub) : whyMain_and_whySub;
         const bunch_data = typeof bunch === 'string' ? JSON.parse(bunch) : bunch;
@@ -448,6 +448,63 @@ const edit_service = async (req, res) => {
 
         if (!existing_service) {
             return res.status(404).json({ message: 'Service not found!' });
+        }
+
+        if (req.files && req.files.length > 0) {
+            const file = req.files.find(f => f.fieldname === 'file');
+            if (file) {
+           
+                if (existing_service.image && existing_service.image !== 'empty') {
+                    const oldImageUrl = existing_service.image;
+                    const oldImageName = oldImageUrl.split('/').pop();
+
+                    const bucket = admin.storage().bucket();
+                    const oldBlob = bucket.file(oldImageName);
+
+                    try {
+                        await oldBlob.delete();  
+                    } catch (error) {
+                        console.log("Error deleting old image:", error.message);
+                    }
+                }
+
+      
+                if (!admin.apps.length) {
+                    admin.initializeApp({
+                        credential: admin.credential.cert(serviceAccount),
+                        storageBucket: process.env.STORAGE_BUCKET
+                    });
+                }
+
+                const bucket = admin.storage().bucket();
+                const blob = bucket.file(file.filename);
+                const blobStream = blob.createWriteStream({
+                    metadata: {
+                        contentType: file.mimetype
+                    }
+                });
+
+                await new Promise((resolve, reject) => {
+                    blobStream.on('error', (err) => {
+                        reject(err);
+                    });
+
+                    blobStream.on('finish', async () => {
+                        try {
+                            await blob.makePublic();
+                            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+                            fs.unlinkSync(file.path); 
+
+                        
+                            existing_service.image = publicUrl;
+                        } catch (err) {
+                            reject(err);
+                        }
+                    });
+
+                    fs.createReadStream(file.path).pipe(blobStream);
+                });
+            }
         }
 
       
@@ -466,7 +523,7 @@ const edit_service = async (req, res) => {
         existing_service.note = note || existing_service.note;
         existing_service.price = price || existing_service.price;
 
-      
+     
         if (Q_A && Q_A.length > 0) {
             existing_service.questions_and_answers = [];
             Q_A.forEach(Question => {
@@ -479,6 +536,7 @@ const edit_service = async (req, res) => {
             });
         }
 
+ 
         if (M_S && M_S.length > 0) {
             existing_service.whyMain_and_whySub = [];
             M_S.forEach(Why => {
@@ -491,7 +549,7 @@ const edit_service = async (req, res) => {
             });
         }
 
-     
+       
         if (bunch_data && bunch_data.length > 0) {
             existing_service.bunch = [];
             bunch_data.forEach(b => {
@@ -510,6 +568,7 @@ const edit_service = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 
