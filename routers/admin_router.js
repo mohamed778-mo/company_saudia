@@ -54,7 +54,7 @@ router.delete('/delete_all_main',adminAuth, delete_all_mains);
 
 router.post('/add_service_to_main/:main_id',adminAuth, Iupload.any() , add_service_to_main);
 
-router.patch('/edit_service/:service_id', adminAuth,  Iupload.any() ,edit_service);
+router.patch('/edit_service/:service_id', adminAuth,  Iupload.single('file') ,edit_service);
 
 
 router.get('/get_service_in_dash/:service_id',adminAuth,  get_service_in_dash);
