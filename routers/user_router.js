@@ -9,6 +9,8 @@ const {  get_service , get_all_services ,get_main, get_all_main  } = require('..
 
 
 router.post('/create_form/:service_id', setLanguage, create_form);
+router.post('/createform', setLanguage, create_form);
+
 router.post('/create_contact_form', setLanguage, create_contact_form);
 
 
