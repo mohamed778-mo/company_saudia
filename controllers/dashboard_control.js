@@ -457,39 +457,42 @@ if (req.files && req.files.length > 0) {
            
             if (file) {
                 
-                if (existing_service.image && existing_service.image !== 'empty') {
-                    const oldImageUrl = existing_service.image;
-                    const oldImageName = oldImageUrl.split('/').pop();
-
-                    const bucket = admin.storage().bucket();
-                    const oldBlob = bucket.file(oldImageName);
-
-                    try {
-                        await oldBlob.delete();  
-                    } catch (error) {
-                        console.log("Error deleting old image:", error.message);
-                    }
-                }
-                
- if (!admin.apps.length) {
+                 if (!admin.apps.length) {
                     admin.initializeApp({
                         credential: admin.credential.cert(serviceAccount),
                         storageBucket: 'gs://tharwahb-72cd9.appspot.com'
                     });
                 }
+                    const bucket = admin.storage().bucket();
 
-                const bucket = admin.storage().bucket();
+                
+                if (existing_service.image && existing_service.image !== 'empty') {
+                    
+
+                    
+                    const file = bucket.file(existing_service.image.split('/').pop()); 
+                    
+                    try {
+                          await file.delete();
+                    } catch (error) {
+                        console.log("Error deleting old image:", error.message);
+                    }
+                }
+                
+
+          
                 const blob = bucket.file(file.filename);
                 const blobStream = blob.createWriteStream({
                     metadata: {
                         contentType: file.mimetype
                     }
                 });
+                
+   await new Promise((resolve, reject) => {
+            blobStream.on('error', (err) => {
+              reject(err);
+            });
 
-               blobStream.on('error', (err) => {
-      console.error(err);
-      res.status(500).send('Error uploading file.');
-    });
 
                     blobStream.on('finish', async () => {
                         try {
@@ -505,7 +508,8 @@ if (req.files && req.files.length > 0) {
                     });
 
                     fs.createReadStream(file.path).pipe(blobStream);
-        
+    
+   })
             }
             }
 
