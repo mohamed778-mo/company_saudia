@@ -466,25 +466,6 @@ if (req.files && req.files.length > 0) {
                 console.log('sss')
                     const bucket = admin.storage().bucket();
 
-                
-                if (existing_service.image && existing_service.image !== 'empty') {
-                    
-
-                    
-                    const file_b = bucket.file(existing_service.image.split('/').pop()); 
-                    
-                console.log('sss')
-                    
-                    try {
-                          await file_b.delete();
-                    } catch (error) {
-                        console.log("Error deleting old image:", error.message);
-                    }
-                }
-                
-                console.log('sss')
-
-          
                 const blob = bucket.file(file.filename);
                 const blobStream = blob.createWriteStream({
                     metadata: {
@@ -506,7 +487,9 @@ if (req.files && req.files.length > 0) {
                             fs.unlinkSync(file.path); 
 
                         
-                            existing_service.image = publicUrl;
+                           const new_service = await Services.findByIdAndUpdate(service_id,{image:publicUrl},{new:true});
+                           await new_service.save()
+                            
                 console.log('sss')
                             
                         } catch (err) {
@@ -593,6 +576,7 @@ const mainData = await Main.findOne({ 'services_list.service_id': existing_servi
                 }
             }
         );
+      console.log('ssss')
 
      res.status(200).json({ message: 'Service updated successfully!' });
         
