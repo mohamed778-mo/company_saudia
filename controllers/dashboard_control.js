@@ -415,7 +415,7 @@ const addServiceToMain = async (newService, main_id, res) => {
 
 
 
-const  edit_service = async (req, res) => {
+const edit_service = async (req, res) => {
     try {
         const { 
             arabic_name,
@@ -435,9 +435,9 @@ const  edit_service = async (req, res) => {
         } = req.body;
         const service_id = req.params.service_id;
 
-        const Q_A = JSON.parse(req.body.questions_and_answers);
-        const M_S = JSON.parse(req.body.whyMain_and_whySub);
-        const bunch = JSON.parse(req.body.bunch);
+        const Q_A = req.body.questions_and_answers ? JSON.parse(req.body.questions_and_answers) : null;
+        const M_S = req.body.whyMain_and_whySub ? JSON.parse(req.body.whyMain_and_whySub) : null;
+        const bunch = req.body.bunch ? JSON.parse(req.body.bunch) : null;
 
         const existing_service = await Services.findById(service_id);
 
@@ -486,49 +486,57 @@ const  edit_service = async (req, res) => {
             }
         }
 
-        existing_service.arabic_name = arabic_name;
-        existing_service.english_name = english_name;
-        existing_service.address_arabic_main = address_arabic_main;
-        existing_service.address_english_main = address_english_main;
-        existing_service.address_arabic_sub = address_arabic_sub;
-        existing_service.address_english_sub = address_english_sub;
-        existing_service.youtube_number = youtube_number;
-        existing_service.instagram_number = instagram_number;
-        existing_service.twitter_number = twitter_number;
-        existing_service.snap_number = snap_number;
-        existing_service.tiktok_number = tiktok_number;
-        existing_service.linkedin_number = linkedin_number;
-        existing_service.note = note;
-        existing_service.price = price;
+       
+        existing_service.arabic_name = arabic_name || existing_service.arabic_name;
+        existing_service.english_name = english_name || existing_service.english_name;
+        existing_service.address_arabic_main = address_arabic_main || existing_service.address_arabic_main;
+        existing_service.address_english_main = address_english_main || existing_service.address_english_main;
+        existing_service.address_arabic_sub = address_arabic_sub || existing_service.address_arabic_sub;
+        existing_service.address_english_sub = address_english_sub || existing_service.address_english_sub;
+        existing_service.youtube_number = youtube_number || existing_service.youtube_number;
+        existing_service.instagram_number = instagram_number || existing_service.instagram_number;
+        existing_service.twitter_number = twitter_number || existing_service.twitter_number;
+        existing_service.snap_number = snap_number || existing_service.snap_number;
+        existing_service.tiktok_number = tiktok_number || existing_service.tiktok_number;
+        existing_service.linkedin_number = linkedin_number || existing_service.linkedin_number;
+        existing_service.note = note || existing_service.note;
+        existing_service.price = price || existing_service.price;
 
-        existing_service.questions_and_answers = [];
-        Q_A.forEach(Question => {
-            existing_service.questions_and_answers.push({
-                question_english: Question.question_english,
-                question_arabic: Question.question_arabic,
-                answer_english: Question.answer_english,
-                answer_arabic: Question.answer_arabic
+    
+        if (Q_A && Q_A.length > 0) {
+            existing_service.questions_and_answers = [];
+            Q_A.forEach(Question => {
+                existing_service.questions_and_answers.push({
+                    question_english: Question.question_english,
+                    question_arabic: Question.question_arabic,
+                    answer_english: Question.answer_english,
+                    answer_arabic: Question.answer_arabic
+                });
             });
-        });
+        }
 
-        existing_service.whyMain_and_whySub = [];
-        M_S.forEach(Why => {
-            existing_service.whyMain_and_whySub.push({
-                why_main_arabic: Why.why_main_arabic,
-                why_main_english: Why.why_main_english,
-                why_sub_arabic: Why.why_sub_arabic,
-                why_sub_english: Why.why_sub_english
+        if (M_S && M_S.length > 0) {
+            existing_service.whyMain_and_whySub = [];
+            M_S.forEach(Why => {
+                existing_service.whyMain_and_whySub.push({
+                    why_main_arabic: Why.why_main_arabic,
+                    why_main_english: Why.why_main_english,
+                    why_sub_arabic: Why.why_sub_arabic,
+                    why_sub_english: Why.why_sub_english
+                });
             });
-        });
+        }
 
-        existing_service.bunch = [];
-        bunch.forEach(b => {
-            existing_service.bunch.push({
-                name: b.name,
-                description: b.description,
-                price: b.price
+        if (bunch && bunch.length > 0) {
+            existing_service.bunch = [];
+            bunch.forEach(b => {
+                existing_service.bunch.push({
+                    name: b.name,
+                    description: b.description,
+                    price: b.price
+                });
             });
-        });
+        }
 
         await existing_service.save();
 
@@ -561,6 +569,7 @@ const updateServiceInMain = async (updatedService, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
 
 
 
