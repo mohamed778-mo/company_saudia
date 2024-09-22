@@ -274,6 +274,50 @@ const get_contact_form=async (req,res)=>{
         }
 
 
+const create_form_special=async (req,res)=>{
+try{
+    const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
+   
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:'مجتمع الاعمال'})
+    await new_data.save()
+
+    const transporter = nodemailer.createTransport({
+          service:process.env.SERVICE,
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+              user: process.env.USER_EMAIL,
+              pass: process.env.USER_PASS,
+            },
+          });
+          
+          async function main() {
+          const info = await transporter.sendMail({
+              from: process.env.USER_EMAIL, 
+              to: 'tharwahbusines.ksa@gmail.com' , 
+              subject: "ثروة الاعمال", 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه ${new_data.email} السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
+           
+            });
+          console.log("Message sent");
+          
+          }
+          
+      main().catch((error) => {
+    res.status(400).send("Failed to send email:", error);
+});
+
+
+        
+    res.status(200).send('تم تسجيل طلبك')
+    
+    
+}catch(e){
+    res.status(500).send(e.message)
+}
+                  }
+
             module.exports={
                 create_form,
                 get_all_forms,
@@ -285,6 +329,7 @@ const get_contact_form=async (req,res)=>{
                 delete_contact_form,
                 delete_all_contact_form,
                 get_contact_form,
-                createformother
+                createformother,
+                create_form_special
 
             }
