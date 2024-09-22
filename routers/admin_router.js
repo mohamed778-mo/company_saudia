@@ -67,14 +67,14 @@ router.delete('/delete_all_services/',adminAuth, delete_all_services);
 
 
 router.get('/get_all_forms',adminAuth, setLanguage, get_all_forms);
-router.delete('/delete_form:/form_id', adminAuth, delete_form);
+router.delete('/delete_form/:form_id', adminAuth, delete_form);
 router.delete('/delete_all_form',adminAuth,  delete_all_form);
 
 router.get('/get_all_contact_forms',adminAuth, setLanguage, get_all_contact_forms);
 
-router.get('/get_contact_form:/form_id',adminAuth, setLanguage, get_contact_form);
+router.get('/get_contact_form/:form_id',adminAuth, setLanguage, get_contact_form);
 
-router.delete('/delete_contact_form:/form_id', adminAuth, delete_contact_form);
+router.delete('/delete_contact_form/:form_id', adminAuth, delete_contact_form);
 router.delete('/delete_all_contact_form',adminAuth,  delete_all_contact_form);
 
 module.exports = router;
