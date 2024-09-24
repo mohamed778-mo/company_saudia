@@ -108,6 +108,10 @@ const serviceSchema = new mongoose.Schema({
         type:String,
          
     }, 
+    photo_link:{
+        type:String,
+         
+    }, 
           
         }],
 
