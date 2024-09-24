@@ -212,7 +212,8 @@ const add_service_to_main = async (req, res) => {
     tiktok_number,
     linkedin_number, 
     note,  
-    price
+    price,
+    show
 } = req.body;
         const main_id = req.params.main_id;
 
@@ -277,6 +278,7 @@ const add_service_to_main = async (req, res) => {
                                    linkedin_number, 
                                    note,  
                                    price,
+                                   show,
                                    image: publicUrl
                             });
 
@@ -341,7 +343,8 @@ const add_service_to_main = async (req, res) => {
                                    tiktok_number,
                                    linkedin_number, 
                                    note,  
-                                   price
+                                   price,
+                                   show
                             });
 
            
@@ -438,6 +441,7 @@ const edit_service = async (req, res) => {
             linkedin_number, 
             note,  
             price,
+            show,
             questions_and_answers,
             whyMain_and_whySub,
             bunch
@@ -511,6 +515,8 @@ const edit_service = async (req, res) => {
         existing_service.linkedin_number = linkedin_number || existing_service.linkedin_number;
         existing_service.note = note || existing_service.note;
         existing_service.price = price || existing_service.price;
+        existing_service.show = show || existing_service.show;
+        
 
         if (Q_A && Q_A.length > 0) {
             existing_service.questions_and_answers = Q_A.map(Question => ({
@@ -614,7 +620,8 @@ const get_service = async (req, res) => {
             bunch: bunch,
             price: service.price,
             note: service.note,
-            image:service.image
+            image:service.image,
+            show:service.show
         };
 
         res.status(200).json(response);
@@ -678,7 +685,9 @@ const get_all_services = async (req, res) => {
         bunch: bunch,
         price: service.service_id.price,
         note: service.service_id.note,
-        image:service.service_id.image
+        image:service.service_id.image,
+        show:service.service_id.show
+        
       };
     }).filter(service => service !== null); 
 
@@ -738,7 +747,8 @@ const get_all_services_in_dash = async (req, res) => {
             note: service.service_id.note,
             questions_and_answers: service.service_id.questions_and_answers,
             whyMain_and_whySub: service.service_id.whyMain_and_whySub,
-            image:service.service_id.image
+            image:service.service_id.image,
+            show:service.service_id.show
         }));
 
         res.status(200).json(response);
