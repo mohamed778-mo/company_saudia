@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer")
 
 const create_form =async (req,res)=>{
 try{
-    const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity} = req.body
+    const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing } = req.body
     const service_id = req.params.service_id
     
    const service_data =await Services.findById(service_id)
@@ -21,7 +21,7 @@ try{
 }else{
      service_name =service_data.english_name
 }
-    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:service_name})
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:service_name, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing})
     await new_data.save()
 
     const transporter = nodemailer.createTransport({
@@ -38,7 +38,7 @@ try{
           async function main() {
           const info = await transporter.sendMail({
               from: process.env.USER_EMAIL, 
-              to: 'tharwahbusines.ksa@gmail.com' , 
+              to: 'mohamedelmala70@gmail.com' , 
               subject: "ثروة الاعمال", 
               html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> برجاء التواصل معه ${new_data.email} السلام عليكم استاذه روبا قد تم ملئ استماره " طلب الخدمه او تواصل معنا للاقترح او الشكوى " من المستخدم</P>`, 
            
