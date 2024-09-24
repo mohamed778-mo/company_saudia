@@ -117,9 +117,12 @@ const serviceSchema = new mongoose.Schema({
 
       
     bunch: [{
-        name: String,
+        name_arabic: String, 
+        name_english: String,
         price: Number,
-        description: String
+        description_arabic: String,
+        description_english: String
+        
     }]              
 });
 
