@@ -303,9 +303,12 @@ const add_service_to_main = async (req, res) => {
 
                               bunch.forEach(bunch => {
                                 newService.bunch.push({
-                                    name: bunch.name,
-                                    description: bunch.description,
+                                    name_arabic: bunch.name_arabic,
+                                    name_english: bunch.name_english,
                                     price: bunch.price,
+                                    description_arabic: bunch.description_arabic,
+                                    description_english: bunch.description_english,
+                                    
                                    
                                 });
                             });
@@ -364,9 +367,11 @@ const add_service_to_main = async (req, res) => {
 
                               bunch.forEach(bunch => {
                                 newService.bunch.push({
-                                    name: bunch.name,
-                                    description: bunch.description,
+                                    name_arabic: bunch.name_arabic,
+                                    name_english: bunch.name_english,
                                     price: bunch.price,
+                                    description_arabic: bunch.description_arabic,
+                                    description_english: bunch.description_english,
                                    
                                 });
                             });
@@ -528,9 +533,11 @@ const edit_service = async (req, res) => {
 
         if (bunch_data && bunch_data.length > 0) {
             existing_service.bunch = bunch_data.map(b => ({
-                name: b.name,
-                description: b.description,
-                price: b.price
+                                    name_arabic: b.name_arabic,
+                                    name_english: b.name_english,
+                                    price: b.price,
+                                    description_arabic: b.description_arabic,
+                                    description_english: b.description_english,
             }));
         }
 
@@ -581,6 +588,14 @@ const get_service = async (req, res) => {
             why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english,
             photo_link: why.photo_link
         }));
+        
+           const bunch = service.bunch.map(b => ({
+            name: req.language === 'ar' ? b.name_arabic : b.name_english,
+            description: req.language === 'ar' ? b.description_arabic : b.description_english,
+            price: b.price,
+          
+               
+        }));
 
         const response = {
             service_id: service._id,
@@ -596,7 +611,7 @@ const get_service = async (req, res) => {
             linkedin_number:service.linkedin_number,
             questions_and_answers: questions_and_answers,
             whyMain_and_whySub: whyMain_and_whySub,
-            bunch: service.bunch,
+            bunch: bunch,
             price: service.price,
             note: service.note,
             image:service.image
@@ -638,6 +653,14 @@ const get_all_services = async (req, res) => {
         photo_link: why.photo_link
       }));
 
+ const bunch = service.service_id.bunch.map(b => ({
+            name: req.language === 'ar' ? b.name_arabic : b.name_english,
+            description: req.language === 'ar' ? b.description_arabic : b.description_english,
+            price: b.price,
+          
+               
+        }));
+        
       return {
         service_id: service.service_id._id,
         video_link: service.service_id.videolink,
@@ -652,7 +675,7 @@ const get_all_services = async (req, res) => {
         linkedin_number:service.linkedin_number,
         questions_and_answers: questions_and_answers,
         whyMain_and_whySub: whyMain_and_whySub,
-        bunch: service.service_id.bunch,
+        bunch: bunch,
         price: service.service_id.price,
         note: service.service_id.note,
         image:service.service_id.image
