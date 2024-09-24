@@ -296,7 +296,8 @@ const add_service_to_main = async (req, res) => {
                                     why_main_arabic: Why.why_main_arabic,
                                     why_main_english: Why.why_main_english,
                                     why_sub_arabic: Why.why_sub_arabic,
-                                    why_sub_english: Why.why_sub_english
+                                    why_sub_english: Why.why_sub_english,
+                                    photo_link: Why.photo_link
                                 });
                             });
 
@@ -356,7 +357,8 @@ const add_service_to_main = async (req, res) => {
                     why_main_arabic: Why.why_main_arabic,
                     why_main_english: Why.why_main_english,
                     why_sub_arabic: Why.why_sub_arabic,
-                    why_sub_english: Why.why_sub_english
+                    why_sub_english: Why.why_sub_english,
+                    photo_link: Why.photo_link
                 });
             });
 
@@ -519,7 +521,8 @@ const edit_service = async (req, res) => {
                 why_main_arabic: Why.why_main_arabic,
                 why_main_english: Why.why_main_english,
                 why_sub_arabic: Why.why_sub_arabic,
-                why_sub_english: Why.why_sub_english
+                why_sub_english: Why.why_sub_english,
+                
             }));
         }
 
@@ -575,7 +578,8 @@ const get_service = async (req, res) => {
 
         const whyMain_and_whySub = service.whyMain_and_whySub.map(why => ({
             why_main: req.language === 'ar' ? why.why_main_arabic : why.why_main_english,
-            why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english
+            why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english,
+            photo_link: why.photo_link
         }));
 
         const response = {
@@ -630,7 +634,8 @@ const get_all_services = async (req, res) => {
 
       const whyMain_and_whySub = service.service_id.whyMain_and_whySub.map(why => ({
         why_main: req.language === 'ar' ? why.why_main_arabic : why.why_main_english,
-        why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english
+        why_sub: req.language === 'ar' ? why.why_sub_arabic : why.why_sub_english,
+        photo_link: why.photo_link
       }));
 
       return {
