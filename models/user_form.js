@@ -27,14 +27,24 @@ var userSchema = new mongoose.Schema({
         },
     country:{ 
         type: String, 
-        default:'لا يوجد'
-       
-        
+        default:'لا يوجد'   
     },
     city:{ 
         type: String, 
        default:'لا يوجد'
     },
+    area:{ 
+        type: String, 
+        default:'لا يوجد'
+    }, 
+    district:{ 
+        type: String, 
+        default:'لا يوجد'
+    }, 
+    street:{ 
+        type: String, 
+        default:'لا يوجد'
+    }, 
     job:{ 
         type: String, 
        default:'لا يوجد'
@@ -44,6 +54,18 @@ var userSchema = new mongoose.Schema({
         default:'لا يوجد'
     }, 
     message:{ 
+        type: String, 
+        default:'لا يوجد'
+    }, 
+      trade_name:{ 
+        type: String, 
+        default:'لا يوجد'
+    }, 
+    how_did_you_hear_about_us:{ 
+        type: String, 
+        default:'لا يوجد'
+    },
+    is_the_project_existing:{ 
         type: String, 
         default:'لا يوجد'
     }, 
