@@ -70,6 +70,11 @@ const serviceSchema = new mongoose.Schema({
         type:Number,
           
     },
+     show:{
+        type:Boolean,
+         default:false
+          
+    },
     
     questions_and_answers:[{
       question_english:{
