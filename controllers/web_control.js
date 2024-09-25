@@ -189,7 +189,7 @@ const transporter = nodemailer.createTransport({
               from: process.env.USER_EMAIL, 
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-             html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
+             html: `<b>استمارة دعوة للنقاش والباحث الزائر</b>
                      <p>،السلام عليكم استاذه روبا</p>
                      <p>${new_data.email} قد تم ملء استمارة دعوة للنقاش والباحث الزائر من المستخدم </p>
                      <P> .برجاء التواصل معه </P>`
