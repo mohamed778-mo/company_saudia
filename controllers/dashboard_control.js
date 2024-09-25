@@ -511,40 +511,47 @@ const edit_service = async (req, res) => {
         existing_service.show = show || existing_service.show;
         
 
-        if (Q_A && Q_A.length > 0) {
-            existing_service.questions_and_answers = Q_A.map(Question => ({
+         const updateArray = (existingArray, newArray) => {
+        
+            existingArray.splice(0, existingArray.length);
+
+          
+            newArray.forEach(item => existingArray.push(item));
+        };
+
+     
+        if (Q_A && Array.isArray(Q_A)) {
+            updateArray(existing_service.questions_and_answers, Q_A.map(Question => ({
                 question_english: Question.question_english,
                 question_arabic: Question.question_arabic,
                 answer_english: Question.answer_english,
                 answer_arabic: Question.answer_arabic
-            }));
+            })));
         }
 
-        if (M_S && M_S.length > 0) {
-            existing_service.whyMain_and_whySub = M_S.map(Why => ({
+        
+        if (M_S && Array.isArray(M_S)) {
+            updateArray(existing_service.whyMain_and_whySub, M_S.map(Why => ({
                 why_main_arabic: Why.why_main_arabic,
                 why_main_english: Why.why_main_english,
                 why_sub_arabic: Why.why_sub_arabic,
                 why_sub_english: Why.why_sub_english,
-                photo_link:Why.photo_link
-                
-            }));
+                photo_link: Why.photo_link
+            })));
         }
 
-        if (bunch_data && bunch_data.length > 0) {
-            existing_service.bunch = bunch_data.map(b => ({
-                                    name_arabic: b.name_arabic,
-                                    name_english: b.name_english,
-                                    price: b.price,
-                                    description_arabic: b.description_arabic,
-                                    description_english: b.description_english,
-            }));
+     
+        if (bunch_data && Array.isArray(bunch_data)) {
+            updateArray(existing_service.bunch, bunch_data.map(b => ({
+                name_arabic: b.name_arabic,
+                name_english: b.name_english,
+                price: b.price,
+                description_arabic: b.description_arabic,
+                description_english: b.description_english,
+            })));
         }
 
-
-        if (bunch_data === []  && bunch_data.length === 0 ) {
-            existing_service.bunch=[]
-            }
+     
         
         await existing_service.save();
 
