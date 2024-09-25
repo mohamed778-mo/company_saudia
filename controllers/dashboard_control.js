@@ -768,11 +768,10 @@ const delete_service = async (req, res) => {
         const service_id = req.params.service_id;
         
         const ser = await Services.findById(service_id);
-
-        const deletedService = await Services.findByIdAndDelete(service_id);
-
-        if (!deletedService) return res.status(404).json({ message: 'Service not found' });
-
+        if(!ser){
+            return res.status(404).json({ message: 'Service not found' });
+        }
+       
 
  
     const deleteinmain = await Main.updateMany(
@@ -780,7 +779,7 @@ const delete_service = async (req, res) => {
       { $pull: { services_list: { service_id: service_id } } }
     );
 
-    if (!deleteinmain) return res.status(404).json({ message: 'Service in main not found' });
+    if (!deleteinmain) {return res.status(404).json({ message: 'Service in main not found' })}
 
         if (!admin.apps.length) {
             admin.initializeApp({
@@ -793,7 +792,8 @@ const delete_service = async (req, res) => {
         const file = bucket.file(ser.image.split('/').pop()); 
 
         await file.delete();
-
+        
+      await Services.findByIdAndDelete(service_id);
         
         res.status(200).json({ message: 'Service deleted successfully' });
     } catch (error) {
