@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer")
 
 const create_form =async (req,res)=>{
 try{
-    const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing } = req.body
+    const {firstname ,lastname , email, mobile, country ,city , job , number_of_identity, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing,date } = req.body
     const service_id = req.params.service_id
     
    const service_data =await Services.findById(service_id)
@@ -21,7 +21,7 @@ try{
 }else{
      service_name =service_data.english_name
 }
-    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:service_name, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing})
+    const new_data = new User({firstname, lastname , email, mobile, country , city , job , number_of_identity , service_name:service_name, area, district, street, trade_name, how_did_you_hear_about_us, is_the_project_existing ,date})
     await new_data.save()
 
     const transporter = nodemailer.createTransport({
