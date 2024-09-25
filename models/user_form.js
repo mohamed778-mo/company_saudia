@@ -69,6 +69,9 @@ var userSchema = new mongoose.Schema({
         type: String, 
         default:'لا يوجد'
     }, 
+    date:{ 
+        type: String, 
+    }, 
     service_name:{
         type: String, 
         default:'اقتراح او شكوى'
