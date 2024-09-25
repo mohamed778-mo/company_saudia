@@ -11,7 +11,7 @@ try{
     const service_id = req.params.service_id
    
    const service_data =await Services.findById(service_id)
-    if(service_data){
+    if(!service_data){
         return res.status(400).send("service not exist !!")
     }
     if(service_data){
