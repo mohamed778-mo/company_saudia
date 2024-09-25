@@ -38,12 +38,12 @@ try{
           async function main() {
           const info = await transporter.sendMail({
               from: process.env.USER_EMAIL, 
-              to: 'mohamedelmala70@gmail.com' , 
+              to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
               html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
-                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>،السلام عليكم استاذه روبا</p>
                      <p>${new_data.email} قد تم ملء استمارة طلب الخدمة أو تواصل معنا للاقتراح أو الشكوى من المستخدم </p>
-                     <P> برجاء التواصل معه </P>`
+                     <P> .برجاء التواصل معه </P>`
            
             });
           console.log("Message sent");
@@ -87,9 +87,9 @@ const transporter = nodemailer.createTransport({
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
               html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
-                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>،السلام عليكم استاذه روبا</p>
                      <p>${new_data.email} قد تم ملء استمارة طلب الخدمة أو تواصل معنا للاقتراح أو الشكوى من المستخدم </p>
-                     <P> برجاء التواصل معه </P>`
+                     <P> .برجاء التواصل معه </P>`
            
             });
           console.log("Message sent");
@@ -190,9 +190,9 @@ const transporter = nodemailer.createTransport({
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
              html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
-                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>،السلام عليكم استاذه روبا</p>
                      <p>${new_data.email} قد تم ملء استمارة دعوة للنقاش والباحث الزائر من المستخدم </p>
-                     <P> برجاء التواصل معه </P>`
+                     <P> .برجاء التواصل معه </P>`
            
             });
           console.log("Message sent");
