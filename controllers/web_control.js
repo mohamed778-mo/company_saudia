@@ -9,11 +9,11 @@ const create_form =async (req,res)=>{
 try{
     const data = req.body
     const service_id = req.params.service_id
+   
+   const service_data =await Services.findById(service_id)
     if(service_data){
         return res.status(400).send("service not exist !!")
     }
-   const service_data =await Services.findById(service_id)
-   
     if(service_data){
 
         let service_name;
