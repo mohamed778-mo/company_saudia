@@ -40,7 +40,9 @@ try{
               from: process.env.USER_EMAIL, 
               to: 'mohamedelmala70@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> السلام عليكم استاذه روبا قد تم ملئ استماره طلب الخدمه او تواصل معنا للاقترح او الشكوى من المستخدم ${new_data.email} برجاء التواصل معه /P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
+                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>قد تم ملء استمارة طلب الخدمة أو تواصل معنا للاقتراح أو الشكوى من المستخدم ${new_data.email}. برجاء التواصل معه.</p>`
            
             });
           console.log("Message sent");
@@ -83,7 +85,9 @@ const transporter = nodemailer.createTransport({
               from: process.env.USER_EMAIL, 
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b>استمارة طلب الخدمه او تواصل معنا</b><P> السلام عليكم استاذه روبا قد تم ملئ استماره طلب الخدمه او تواصل معنا للاقترح او الشكوى من المستخدم ${new_data.email} برجاء التواصل معه</P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
+                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>قد تم ملء استمارة طلب الخدمة أو تواصل معنا للاقتراح أو الشكوى من المستخدم ${new_data.email}. برجاء التواصل معه.</p>`
            
             });
           console.log("Message sent");
@@ -183,7 +187,9 @@ const transporter = nodemailer.createTransport({
               from: process.env.USER_EMAIL, 
               to: 'tharwahbusines.ksa@gmail.com' , 
               subject: "ثروة الاعمال", 
-              html: `<b> حجز موعد مع المدير </b><P>  السلام عليكم استاذه روبا قد تم ملئ استماره دعوة للنقاش والباحث الزائر من المستخدم ${new_data.email} برجاء التواصل معه</P>`, 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
+                     <p>السلام عليكم استاذه روبا،</p>
+                     <p>قد تم ملء استمارة دعوة للنقاش والباحث الزائر من المستخدم ${new_data.email}. برجاء التواصل معه.</p>`
            
             });
           console.log("Message sent");
