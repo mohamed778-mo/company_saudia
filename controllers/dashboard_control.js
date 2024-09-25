@@ -223,14 +223,7 @@ const add_service_to_main = async (req, res) => {
         
 
     
-        const existing_service = await Services.findOne({
-            arabic_name: arabic_name,
-            address_arabic_main: address_arabic_main
-        });
-
-        if (existing_service) {
-            return res.status(400).json({ message: 'Service already exists!' });
-        }
+        
 
        
         if (req.files && req.files.length > 0) {
