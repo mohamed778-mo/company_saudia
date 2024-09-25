@@ -541,6 +541,11 @@ const edit_service = async (req, res) => {
             }));
         }
 
+
+        if (bunch_data === []  && bunch_data.length === 0 ) {
+            existing_service.bunch=[]
+            }
+        
         await existing_service.save();
 
         const mainData = await Main.findOne({ 'services_list.service_id': existing_service._id });
