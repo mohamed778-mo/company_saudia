@@ -9,7 +9,9 @@ const create_form =async (req,res)=>{
 try{
     const data = req.body
     const service_id = req.params.service_id
-    
+    if(service_data){
+        return res.status(400).send("service not exist !!")
+    }
    const service_data =await Services.findById(service_id)
    
     if(service_data){
@@ -21,7 +23,8 @@ try{
 }else{
      service_name =service_data.english_name
 }
-    const new_data = new User(data,{service_name:service_name})
+    const new_data = new User(data)
+    new_data.service_name=service_name
     await new_data.save()
 
     const transporter = nodemailer.createTransport({
