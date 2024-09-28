@@ -9,7 +9,7 @@ const create_form =async (req,res)=>{
 try{
     const data = req.body
     const service_id = req.params.service_id
-    let plan = req.body.plan || "." ;
+    let plan = req.body.plan 
     
    const service_data =await Services.findById(service_id)
     if(!service_data){
@@ -18,14 +18,19 @@ try{
     if(service_data){
 
         let service_name;
+       
 
     if(req.language === 'ar'){
      service_name =service_data.arabic_name
+
+        
 }else{
      service_name =service_data.english_name
 }
-    const new_data = new User(data)
-    new_data.service_name=service_name+`/${plan}`
+
+if(plan){
+     const new_data = new User(data)
+    new_data.service_name=service_name+`باقه/${plan}`
     new_data.plan=plan   
     await new_data.save()
 
@@ -63,6 +68,48 @@ try{
 
         
     res.status(200).send('تم تسجيل طلبك')
+}else{
+     const new_data = new User(data)
+    new_data.service_name=service_name  
+    await new_data.save()
+
+    const transporter = nodemailer.createTransport({
+          service:process.env.SERVICE,
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+              user: process.env.USER_EMAIL,
+              pass: process.env.USER_PASS,
+            },
+          });
+          
+          async function main() {
+          const info = await transporter.sendMail({
+              from: process.env.USER_EMAIL, 
+              to: 'tharwahbusines.ksa@gmail.com' , 
+              subject: "ثروة الاعمال", 
+              html: `<b>استمارة طلب الخدمه او تواصل معنا</b>
+                     <p>، السلام عليكم استاذه رُبى</p>
+                     <p> :قد تم ملء استمارة طلب الخدمة أو تواصل معنا للاقتراح أو الشكوى من المستخدم </p>
+                     <p>${new_data.email}</p>
+                     <P> .برجاء التواصل معه </P>`
+           
+            });
+          console.log("Message sent");
+          
+          }
+          
+      main().catch((error) => {
+    res.status(400).send("Failed to send email:", error);
+});
+
+
+        
+    res.status(200).send('تم تسجيل طلبك')
+}
+        
+   
     }
     
 }catch(e){
