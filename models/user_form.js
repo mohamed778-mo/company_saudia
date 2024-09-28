@@ -75,8 +75,11 @@ var userSchema = new mongoose.Schema({
     service_name:{
         type: String, 
         default:'اقتراح او شكوى'
-    }
- 
+    },
+ plan:{ 
+        type: String, 
+  
+    },
 
 }, 
 { timestamps: true }
