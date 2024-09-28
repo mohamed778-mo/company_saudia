@@ -9,7 +9,7 @@ const create_form =async (req,res)=>{
 try{
     const data = req.body
     const service_id = req.params.service_id
-    let plan = req.body.plan || "لا يوجد" ;
+    let plan = req.body.plan || "." ;
     
    const service_data =await Services.findById(service_id)
     if(!service_data){
@@ -25,7 +25,7 @@ try{
      service_name =service_data.english_name
 }
     const new_data = new User(data)
-    new_data.service_name=service_name
+    new_data.service_name=service_name+`/${plan}`
     new_data.plan=plan   
     await new_data.save()
 
