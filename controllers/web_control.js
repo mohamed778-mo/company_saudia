@@ -30,7 +30,7 @@ try{
 
 if(plan){
      const new_data = new User(data)
-    new_data.service_name=service_name+`باقه/${plan}`
+    new_data.service_name=service_name+`/${plan}`
     new_data.plan=plan   
     await new_data.save()
 
