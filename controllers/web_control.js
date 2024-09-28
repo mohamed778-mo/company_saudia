@@ -9,7 +9,8 @@ const create_form =async (req,res)=>{
 try{
     const data = req.body
     const service_id = req.params.service_id
-   
+    let plan = req.body.plan || "لا يوجد" ;
+    
    const service_data =await Services.findById(service_id)
     if(!service_data){
         return res.status(400).send("service not exist !!")
@@ -25,6 +26,7 @@ try{
 }
     const new_data = new User(data)
     new_data.service_name=service_name
+    new_data.plan=plan   
     await new_data.save()
 
     const transporter = nodemailer.createTransport({
