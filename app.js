@@ -34,7 +34,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 connection();
 
-const port = process.env.PORT || 3003 ;
+const port = process.env.PORT || 3000 ;
 app.listen(port, () => {
     console.log(`Connection on port ${port}`);
 });
